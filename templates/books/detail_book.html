@@ -1,0 +1,25 @@
+{% extends 'base.html' %}   
+{% block content %}
+<main>
+    <hr>
+    <center>
+        <h2>Detalhe do Livro</h2>
+    </center>
+    <hr>
+    <div>
+        <img src="{{book.cape.url}}" width="340px" height="530" alt="Capa do Livro">
+        <p>Nome do Livro: {{book.title}}</p>
+        {% for autor in book.author.all %}
+                <p>Autor: {{autor.name}}</p>
+            {% endfor %}
+        {% for genero in book.gender.all %}
+            <p>Gênero: <button>{{genero}}</button></p>
+        {% endfor %}
+        <pre>
+            {{book.sinopse}}
+        </pre>
+        <p>Ano de Publicação: {{book.year_publication}}</p>
+        <embed src="{{book.book.url}}">
+    </div>
+</main>
+{% endblock %}

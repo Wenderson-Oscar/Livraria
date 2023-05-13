@@ -1,0 +1,20 @@
+{% extends 'base.html' %}   
+{% block content %}
+<main>
+    <hr>
+    <center>
+        <h2>Lista de Livros</h2>
+    </center>
+    <hr>
+    {% for book in books.all %}
+        <a href="{% url 'detail_book' pk=book.id %}">
+            <img src="{{book.cape.url}}" height="240px" width="200px" alt="Capa da Imagem"><br>
+            <b>Nome</b> {{book.title}}<br>
+            {% for autor in book.author.all %}
+                <b>Autor:</b> {{autor.name}}
+            {% endfor %}
+        </a>
+        <hr>
+    {% endfor %}
+</main>
+{% endblock %}
