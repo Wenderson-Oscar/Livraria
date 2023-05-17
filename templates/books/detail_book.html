@@ -6,20 +6,32 @@
         <h2>Detalhe do Livro</h2>
     </center>
     <hr>
-    <div>
-        <img src="{{book.cape.url}}" width="340px" height="530" alt="Capa do Livro">
-        <p>Nome do Livro: {{book.title}}</p>
-        {% for autor in book.author.all %}
-                <p>Autor: {{autor.name}}</p>
+<div class="container">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="{{book.cape.url}}" width="340px" height="510" alt="Capa do Livro">
+        </div>
+        <div class="col-md-8">
+            <p><b>Nome do Livro:</b> {{book.title}}</p>
+            {% for autor in book.author.all %}
+            <p><b>Autor:</b> {{autor.name}}</p>
             {% endfor %}
-        {% for genero in book.gender.all %}
-            <p>Gênero: <button>{{genero}}</button></p>
-        {% endfor %}
-        <pre>
-            {{book.sinopse}}
-        </pre>
-        <p>Ano de Publicação: {{book.year_publication}}</p>
-        <a href="{{book.book.url}}" download> Baixar Livro </a>  
+            {% for genero in book.gender.all %}
+            <p><b>Gênero:</b> <button class="btn btn-primary disabled" type="button">{{genero}}</button></p>
+            {% endfor %}
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <td>{{book.sinopse}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p><b>Ano de Publicação:</b> {{book.year_publication}}</p>
+            <a href="{{book.book.url}}" download> Baixar Livro </a>
+        </div>
     </div>
+</div>
 </main>
 {% endblock %}

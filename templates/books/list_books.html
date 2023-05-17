@@ -1,4 +1,5 @@
-{% extends 'base.html' %}   
+{% extends 'base.html' %}  
+{% load static %}
 {% block content %}
 <main>
     <hr>
@@ -6,15 +7,23 @@
         <h2>Lista de Livros</h2>
     </center>
     <hr>
-    {% for book in books.all %}
-        <a href="{% url 'detail_book' pk=book.id %}">
-            <img src="{{book.cape.url}}" height="240px" width="200px" alt="Capa da Imagem"><br>
-            <b>Nome</b> {{book.title}}<br>
-            {% for autor in book.author.all %}
-                <b>Autor:</b> {{autor.name}}
+    <div class="container">
+        <div class="row">
+            {% for book in books.all %}
+            <div class="col-md-3">
+                <table class="table-responsive">
+                    <a href="{% url 'detail_book' pk=book.id %}">
+                    <img src="{{book.cape.url}}" height="240px" width="200px" alt="Capa da Imagem"><br>
+                    <b>Nome:</b> {{book.title}}<br>
+                    {% for autor in book.author.all %}
+                    <b>Autor:</b> {{autor.name}}
+                    {% endfor %}
+                    </a>
+                </table>
+            </div>
             {% endfor %}
-        </a>
-        <hr>
-    {% endfor %}
+        </div>
+    </div>
+    
 </main>
 {% endblock %}
