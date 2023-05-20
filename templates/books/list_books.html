@@ -13,11 +13,15 @@
             <div class="col-md-3">
                 <table class="table-responsive">
                     <a href="{% url 'detail_book' pk=book.id %}">
-                    <img src="{{book.cape.url}}" height="240px" width="200px" alt="Capa da Imagem"><br>
+                    <img src="{{book.cape.url}}" height="190px" width="140px" alt="Capa da Imagem"><br>
                     <b>Nome:</b> {{book.title}}<br>
                     {% for autor in book.author.all %}
                     <b>Autor:</b> {{autor.name}}
                     {% endfor %}
+                    </a>
+                    <br>
+                    <a href="{% url 'detail_book' pk=book.id %}">
+                        <button class="btn btn-primary disabled" type="submit">Abrir</button>
                     </a>
                 </table>
             </div>
