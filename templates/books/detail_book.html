@@ -26,7 +26,9 @@
                 </table>
             </div>
             <p><b>Ano de Publicação:</b> {{book.year_publication}}</p>
-            <a href="{{book.book.url}}" download> Baixar Livro </a>
+            {% if user.is_authenticated %}
+                <a href="{{book.book.url}}" download> Baixar Livro </a>
+            {% endif %}
         </div>
     </div>
 </div>
