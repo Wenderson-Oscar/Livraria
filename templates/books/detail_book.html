@@ -32,15 +32,11 @@
                             </table>
                         </div>
                         <p><b>Ano de Publicação:</b> {{book.year_publication}}</p>
-                        {% if user.is_authenticated %}
-                            <a href="{{book.book.url}}" class="btn btn-primary" download> Baixar Livro </a>
-                        {% endif %}
-                        <a href="{{book.book.url}}" class="btn btn-primary"> Visualizar Livro </a>
+                        <a href="{{book.book.url}}" class="btn btn-primary" download> Baixar Livro </a>
                     </div>
                 </div>
             </div>
         </div>
-        
     </div>
 </main>
 {% endblock %}
