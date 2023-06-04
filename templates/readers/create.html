@@ -3,7 +3,11 @@
 <main class="d-flex justify-content-center align-items-center vh-100">
     <div class="card">
         <div class="card-body">
-            <h1 class="text-center">Cadastro</h1>
+            {% if user.is_authenticated %}
+                <h1 class="text-center">Editar Usuário</h1>
+            {% else %}
+                <h1 class="text-center">Cadastro</h1>
+            {% endif %}
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{form}}

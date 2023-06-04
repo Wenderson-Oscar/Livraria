@@ -1,14 +1,48 @@
-from django.views.generic import CreateView
+from django.http import HttpResponse
+from django.views.generic import CreateView, DetailView, DeleteView, UpdateView
 from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
 from django.contrib.auth.forms import AuthenticationForm
-from .forms import CreateReaderForms
+from .forms import CreateUserForms, ChangerUser
+from .models import Reader
+from accounts.models import User
 
 
-class CreateReader(CreateView):
+class UpdateUser(UpdateView):
+
+    model = User
+    template_name = 'readers/create.html'
+    form_class = ChangerUser
+    success_url = reverse_lazy('list_books')
+
+    def get_object(self):
+        return self.request.user
+
+
+class DeleteUser(DeleteView):
+
+    model = User
+    template_name = 'readers/delete_user.html'
+    success_url = reverse_lazy('list_books')
+
+    def get_object(self):
+        return self.request.user.email
+    
+    def get_success_url(self) -> str:
+        return self.success_url
+
+
+class PerfilDetail(DetailView):
+
+    model = Reader
+    template_name = 'readers/perfil.html'
+    context_object_name = 'perfil'
+
+
+class CreateUser(CreateView):
 
     template_name = 'readers/create.html'
-    form_class = CreateReaderForms
+    form_class = CreateUserForms
     success_url = reverse_lazy('list_books')
 
 
@@ -24,5 +58,5 @@ class Login(LoginView):
 
 
 class Logout(LogoutView):
-    
+
     next_page = reverse_lazy('list_books')
