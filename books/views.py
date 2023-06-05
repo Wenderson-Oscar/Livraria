@@ -1,3 +1,5 @@
+from typing import Any
+from django.db import models
 from django.views.generic import ListView, DetailView
 from .models import Book
 

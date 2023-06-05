@@ -45,9 +45,6 @@ INSTALLED_APPS = [
     'books',
     #conta
     'accounts',
-    'reader',
-    #bate-papo
-    'chat',
 ]
 
 MIDDLEWARE = [
