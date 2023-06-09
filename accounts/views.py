@@ -1,6 +1,6 @@
 from django.views.generic import CreateView, DetailView, DeleteView, UpdateView
 from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView, LogoutView, PasswordResetView
+from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import AuthenticationForm
 from .forms import CreateUserForms, ChangerUserForms
 from .models import User
@@ -44,7 +44,7 @@ class CreateUser(CreateView):
 
     template_name = 'accounts/create.html'
     form_class = CreateUserForms
-    success_url = reverse_lazy('list_books')
+    success_url = reverse_lazy('login_user')
 
 
 class Login(LoginView):
