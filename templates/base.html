@@ -27,7 +27,7 @@
                 <a class="nav-link active" aria-current="page" href="{% url 'list_books' %}">Livros</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Lancamentos</a>
+                <a class="nav-link" href="{% url 'list_books_order' %}">Lancamentos</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{% url 'create_user' %}"> Registrar </a>
@@ -35,7 +35,7 @@
             </ul>
             <form class="d-flex" role="buscar">
               {% if user.is_authenticated %}
-                  <a class="btn btn-outline-success" href="{% url 'perfil' pk=user.pk %}"> Perfil </a>
+                  <a class="btn btn-outline-success" href="{% url 'perfil' %}"> Perfil </a>
               {% endif %}
               <input class="form-control me-2" type="buscar" placeholder="buscar" aria-label="buscar">
               <button class="btn btn-outline-success" type="submit">Buscar</button>
