@@ -17,6 +17,12 @@
                         {% for genero in book.gender.all %}
                             <p><b>Gênero:</b> <button class="btn btn-primary disabled" type="button">{{genero}}</button></p>
                         {% endfor %}
+                        <b>Quantidade de downloads </b> {{book.quant_downloads}}<br>
+                        <b>Curtidas</b> {{book.quant_like}}
+                        <br>
+                        {% if user.is_authenticated %}
+                            <a href="{% url 'like_book' pk=book.pk %}"><button class="btn btn-primary" type="button">Curtir</button></a>
+                        {% endif %}
                         <div class="table-responsive">
                             <table class="table table-bordered">
                                 <thead>
@@ -32,7 +38,15 @@
                             </table>
                         </div>
                         <p><b>Ano de Publicação:</b> {{book.year_publication}}</p>
-                        <a href="{{book.book.url}}" class="btn btn-primary" download> Baixar Livro </a>
+                        {% if user.is_authenticated %}
+                            <a id="downloads" href="{{book.book.url}}" class="btn btn-primary" download> Baixar Livro</a>
+                            <script>
+                            var downloads = document.getElementById('downloads');
+                            downloads.addEventListener('click', function() {
+                                window.location.href = "{% url 'count_downl' pk=book.pk %}";
+                            });
+                            </script>
+                        {% endif %}
                         <div>
                         </div>
                     </div>
