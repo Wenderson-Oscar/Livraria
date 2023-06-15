@@ -3,6 +3,7 @@ from django.views import View
 from django.views.generic import ListView, DetailView
 from .models import Book, Like
 from django.contrib.auth.mixins import LoginRequiredMixin
+from chat.models import Chat
 
 
 class ListBooks(ListView):
@@ -10,16 +11,19 @@ class ListBooks(ListView):
     model = Book
     template_name = 'books/list_books.html'
     context_object_name = 'books'
-    paginate_by = 20
+
+    def get_queryset(self):
+        return self.model.objects.order_by('-quant_like').all()
+
+    def get_paginate_orphans(self) -> int:
+        return 10
 
 
-class ListOrderBooks(ListBooks):
-
-    paginate_by = 10
+class ListOrderPublicationBooks(ListBooks):
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        queryset = queryset.order_by('-year_publication')
+        queryset = queryset.order_by('-year_publication').all()
         return queryset
 
 
@@ -28,6 +32,11 @@ class DetailBook(DetailView):
     model = Book
     template_name = 'books/detail_book.html'
     context_object_name = 'book'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['list_comment'] = Chat.objects.filter(id_book=self.kwargs.get('pk')).order_by('-year_publication').all()
+        return context
 
 
 class AddLikeBook(LoginRequiredMixin, View):
@@ -56,8 +65,6 @@ class CountDownloadsBook(LoginRequiredMixin, DetailBook):
         if self.model.objects.filter(quant_downloads=self.kwargs['pk']).count() >= 0:
             book.quant_downloads = book.quant_downloads + 1
             book.save()
-        success_url = '/detail_book/' + self.get_object()
+        success_url = '/detail_book/' + str(self.kwargs.get('pk'))
         return redirect(success_url)
     
-    def get_object(self):
-        return str(self.kwargs.get('pk'))

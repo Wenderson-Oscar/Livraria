@@ -74,8 +74,3 @@ class Login(LoginView):
 class Logout(LoginRequiredMixin, LogoutView):
 
     next_page = reverse_lazy('list_books')
-
-    def post(self, request, *args, **kwargs):
-        contex = super().post(request, *args, **kwargs)
-        contex = request.session.flush()
-        return contex
