@@ -14,7 +14,7 @@ class ResponseComment(LoginRequiredMixin, CreateView):
     def post(self, request, pk, pk1):
         parent_comment = get_object_or_404(Chat, pk=pk1)
         if request.POST.get('response_msg'):
-            response = self.model.objects.create(
+            self.model.objects.create(
                 id_book=pk,
                 comment=request.POST.get('response_msg'),
                 author=request.user,
@@ -53,5 +53,14 @@ class AddLikeComment(LoginRequiredMixin, View):
             like.delete()
             like_comment.quant_like -= 1
             like_comment.save()
+        success_url = '/detail_book/' + str(pk)
+        return redirect(success_url)
+
+
+class DeleteComment(AddLikeComment):
+
+    def get(self, request, pk1, pk):
+        filt = Chat.objects.filter(pk=pk1, author=request.user, id_book=pk)
+        filt.delete()
         success_url = '/detail_book/' + str(pk)
         return redirect(success_url)
