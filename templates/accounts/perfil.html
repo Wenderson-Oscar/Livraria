@@ -8,7 +8,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         {% if perfil.perfil %}
-                            <img class="card-img" src="{{perfil.perfil.url}}" alt="Foto de Perfil"><br>
+                            <img class="card-img" src="{{perfil.perfil.url}}" alt="Foto de Perfil" height="300px" width="350px"><br>
                         {% else %}
                             Foto de Perfil Não Adicionado(a)<br>
                         {% endif %}
@@ -28,7 +28,7 @@
                         <br>
                         <a href="{% url 'update_user' %}" class="btn btn-primary"> Editar Perfil </a>
                         <a href="{% url 'delete_user' %}" class="btn btn-primary"> Excluir Conta </a>
-                        <a href="#" class="btn btn-primary"> Mudar Senha </a>
+                        <a href="{% url 'password_reset' %}" class="btn btn-primary"> Mudar Senha </a>
                     </div>
                 </div>
             </div>
