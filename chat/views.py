@@ -1,14 +1,31 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 from .models import Chat
 from books.models import Like
 from django.contrib.auth.mixins import LoginRequiredMixin
 
 
+class UpdateComment(LoginRequiredMixin, UpdateView):
+
+    model = Chat
+    fields = ['comment']
+    template_name = 'books/detail_book.html'
+    success_url = '/detail_book/'
+
+    def post(self, request, pk, pk1):
+        get_id = get_object_or_404(Chat, pk=pk1)
+        if request.POST.get('edit_msg'):
+            get_id.comment = request.POST.get('edit_msg')
+            get_id.save()
+            success_url = '/detail_book/' + str(pk)
+            return redirect(success_url)
+
+
 class ResponseComment(LoginRequiredMixin, CreateView):
 
     model = Chat
+    template_name = 'books/detail_book.html'
     fields = ['comment']
 
     def post(self, request, pk, pk1):

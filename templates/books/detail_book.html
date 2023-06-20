@@ -1,4 +1,4 @@
-{% extends 'base.html' %}   
+{% extends 'base.html' %}
 {% block content %}
 <main>
     <br>
@@ -14,42 +14,83 @@
                         {% for autor in book.author.all %}
                             <p><b>Autor:</b> {{autor.name}}</p>
                         {% endfor %}
-                        {% for genero in book.gender.all %}
-                            <p><b>Gênero:</b> <button class="btn btn-primary disabled" type="button">{{genero}}</button></p>
-                        {% endfor %}
-                        <b>Quantidade de downloads </b> {{book.quant_downloads}}<br>
-                        <b>Curtidas</b> {{book.quant_like}}
-                        <br>
-                        {% if user.is_authenticated %}
-                            <a href="{% url 'like_book' pk=book.pk %}"><button class="btn btn-primary" type="button">Curtir</button></a>
-                        {% endif %}
-                        <div class="table-responsive">
+                        <p><b>Gênero:</b>
+                            {% for genero in book.gender.all %}
+                                <button class="btn btn-primary disabled" type="button"> {{genero}}</button>
+                            {% endfor %}
                             <br>
-                            <table class="table table-bordered">
-                                <thead>
-                                    <tr>
-                                        <th scope="col"><b>Sinopse:</b></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{book.sinopse}}</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                            <a href="{% url 'add_favority' pk=book.pk %}" class="btn btn-primary">Add Favorito</a><br>
+                            <b>Quantidade de downloads </b> {{book.quant_downloads}}<br>
+                            <b>Curtidas</b> {{book.quant_like}}
+                            <br>
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'like_book' pk=book.pk %}">
+                                    <button class="btn btn-primary" type="button">Curtir</button>
+                                </a>
+                            {% endif %}
+                            <div class="table-responsive">
+                                <br>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th scope="col"><b>Sinopse:</b></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{book.sinopse}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <p><b>Ano de Publicação:</b> {{book.year_publication}}</p>
+                            <a id="downloads" href="{{book.book.url}}" class="btn btn-primary"> Ler Livro</a>
+                            {% if user.is_authenticated %}
+                                <a id="count_downl" href="{{book.book.url}}" class="btn btn-primary" download> Baixar Livro</a>
+                                <script>
+                                    var count_downl = document.getElementById('count_downl');
+                                    count_downl.addEventListener('click', function() {
+                                        window.location.href = "{% url 'count_downl' pk=book.pk %}";
+                                    });
+                                </script>
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+                                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js"></script>
+                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf_viewer.min.css">
+                                <script>
+                                    var downloads = document.getElementById('downloads');
+                                    downloads.addEventListener('click', function() {
+                                        window.location.href = "{% url 'count_downl' pk=book.pk %}";
+                                    });
+                                    PDFJS.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js';
+                                    var url = '{{book.book.url}}';
+                                    PDFJS.getDocument(url).promise.then(function(pdf) {
+                                        var pageNumber = 1;
+                                        pdf.getPage(pageNumber).then(function(page) {
+                                            var scale = 1.5;
+                                            var viewport = page.getViewport({ scale: scale });
+
+                                            var canvas = document.createElement('canvas');
+                                            var context = canvas.getContext('2d');
+                                            canvas.height = viewport.height;
+                                            canvas.width = viewport.width;
+
+                                            var container = document.createElement('div');
+                                            container.appendChild(canvas);
+                                            document.body.appendChild(container);
+
+                                            var renderContext = {
+                                                canvasContext: context,
+                                                viewport: viewport
+                                            };
+                                            page.render(renderContext);
+                                        });
+                                    });
+                                </script>
+                            {% endif %}
+                            <div>
+                                <br>
+                            </div>
                         </div>
-                        <p><b>Ano de Publicação:</b> {{book.year_publication}}</p>
-                        {% if user.is_authenticated %}
-                            <a id="downloads" href="{{book.book.url}}" class="btn btn-primary" download> Baixar Livro</a>
-                            <script>
-                            var downloads = document.getElementById('downloads');
-                            downloads.addEventListener('click', function() {
-                                window.location.href = "{% url 'count_downl' pk=book.pk %}";
-                            });
-                            </script>
-                        {% endif %}
-                        <div>
-                    </div>
                     </div>
                     <hr>
                     <h2>Comentar</h2>
@@ -78,7 +119,23 @@
                                                     <a href="{% url 'delete_comment' pk=book.pk pk1=comment.pk %}" class="btn btn-danger btn-sm">Excluir</a>
                                                 {% endif %}
                                             </div>
-                                            <p class="form-control">{{ comment.comment }}</p>
+                                            <p id="comment_text_{{ comment.pk }}" class="form-control">{{ comment.comment }}</p>
+                                            {% if user == comment.author %}
+                                                <div id="comment_{{ comment.pk }}">
+                                                    <div id="edit_comment_{{ comment.pk }}" {% if not edit %}style="display: none;"{% endif %}>
+                                                        <form id="editFormulario_{{ comment.pk }}" method="post" action="{% url 'update_comment' pk=book.pk pk1=comment.pk %}">
+                                                            {% csrf_token %}
+                                                            <div class="input-group mb-3">
+                                                                {% if not edit %}
+                                                                    <input type="text" name="edit_msg" id="edit_msg_input_{{ comment.pk }}" class="form-control" placeholder="{{ comment.comment }}">
+                                                                {% endif %}
+                                                                <button class="btn btn-success" type="submit">Salvar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <button class="btn btn-primary" id="edit_msg_{{ comment.pk }}" onclick="toggleEditForm('{{ comment.pk }}')">Editar</button>
+                                                </div>
+                                            {% endif %}
                                         </div>
                                     </div>
                                     <div class="d-flex justify-content-between">
@@ -88,54 +145,93 @@
                                             {% if user.is_authenticated %}
                                                 <a href="{% url 'add_like' pk1=comment.pk pk=book.pk %}" class="btn btn-primary">Curtir</a>
                                             {% endif %}
-                                        </div>   
-                                    </div>
-                                </div>
-                                
-                            {% if comment.replies.all %}
-                            <div class="card-footer">
-                                {% for reply in comment.replies.all %}
-                                <br>
-                                <div class="d-flex align-items-start mb-2">
-                                    <div>
-                                        {% if reply.author.perfil %}
-                                            <img src="{{ reply.author.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
-                                        {% endif %}
-                                    </div>
-                                    <div class="flex-grow-1 ms-2">
-                                        <div class="d-flex justify-content-between">
-                                            <h5 class="card-title">{{reply.author}}</h5>
-                                            {% if user == reply.author %}
-                                                <a href="{% url 'delete_comment' pk=book.pk pk1=reply.pk %}" class="btn btn-danger btn-sm">Excluir</a>
-                                            {% endif %}
                                         </div>
-                                        <p class="form-control">{{ reply.comment }}</p>
-                                        <p class="card-text">Curtidas: {{ reply.quant_like }}</p>
-                                        {% if user.is_authenticated %}
-                                            <a href="{% url 'add_like' pk1=reply.pk pk=book.pk %}" class="btn btn-primary">Curtir</a>
-                                        {% endif %}
                                     </div>
                                 </div>
-                                <hr>
-                                {% endfor %}
-                            </div>
-                            
-                            {% endif %}
+                                {% if comment.replies.all %}
+                                    {% for reply in comment.replies.all %}
+                                        <br>
+                                        <div class="flex-grow-1 ml-5">
+                                            <div class="d-flex align-items-start mb-2">
+                                                {% if reply.author.perfil %}
+                                                    <img src="{{ reply.author.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
+                                                {% endif %}
+                                                <div class="flex-grow-1">
+                                                    <div class="d-flex justify-content-between align-items-center">
+                                                        <h5 class="card-title">{{ reply.author }}</h5>
+                                                        {% if user == reply.author %}
+                                                            <a href="{% url 'delete_comment' pk=book.pk pk1=reply.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+                                                        {% endif %}
+                                                    </div>
+                                                    <p id="comment_text_{{ reply.pk }}" class="form-control">{{ reply.comment }}</p>
+                                                    {% if user == reply.author %}
+                                                        <div id="comment_{{ reply.pk }}">
+                                                            <div id="edit_comment_{{ reply.pk }}" {% if not edit %}style="display: none;"{% endif %}>
+                                                                <form id="editFormulario_{{ reply.pk }}" method="post" action="{% url 'update_comment' pk=book.pk pk1=reply.pk %}">
+                                                                    {% csrf_token %}
+                                                                    <div class="input-group mb-3">
+                                                                        {% if not edit %}
+                                                                            <input type="text" name="edit_msg" id="edit_msg_input_{{ reply.pk }}" class="form-control" placeholder="{{ reply.comment }}">
+                                                                        {% endif %}
+                                                                        <button class="btn btn-success" type="submit">Salvar</button>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                            <button class="btn btn-primary" id="edit_msg_{{ reply.pk }}" onclick="toggleEditForm('{{ reply.pk }}')">Editar</button>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                            <div class="d-flex justify-content-between">
+                                                <div>
+                                                    <p class="card-text">Publicado em {{ reply.year_publication }}</p>
+                                                    <p class="card-text">Curtidas: {{ reply.quant_like }}</p>
+                                                    {% if user.is_authenticated %}
+                                                        <a href="{% url 'add_like' pk1=reply.pk pk=book.pk %}" class="btn btn-primary">Curtir</a>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
                                 <form id="responseFormulario" method="post" action="{% url 'create_comment_response' pk1=comment.pk pk=book.pk %}">
                                     {% csrf_token %}
-                                    <div class="input-group mb-3">
+                                    <div class="input-group mb-3 ml-5">
                                         <input type="text" name="response_msg" id="response_msg" class="form-control" placeholder="Digite seu Comentário">
                                         <button class="btn btn-success" type="submit">Enviar</button>
                                         <a href="{% url 'detail_book' pk=book.pk %}" class="btn btn-secondary" role="button">Cancelar</a>
                                     </div>
                                 </form>
-                                </div>
                             </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>
 </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+<script>
+    function toggleEditForm(commentId) {
+        var commentText = document.getElementById("comment_text_" + commentId);
+        var editForm = document.getElementById("edit_comment_" + commentId);
+        var editButton = document.getElementById("edit_msg_" + commentId);
+
+        if (commentText.style.display === "none") {
+            commentText.style.display = "block";
+            editForm.style.display = "none";
+            editButton.innerHTML = "Editar";
+        } else {
+            commentText.style.display = "none";
+            editForm.style.display = "block";
+            editButton.innerHTML = "Cancelar";
+        }
+    }
+
+    function generatePDF() {
+        var element = document.getElementById("pdfContent");
+        html2pdf().from(element).save();
+    }
+</script>
 {% endblock %}

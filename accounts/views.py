@@ -1,3 +1,5 @@
+from django.shortcuts import get_object_or_404, redirect
+from django.views import View
 from django.views.generic import CreateView, DetailView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
@@ -5,6 +7,18 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import CreateUserForms
 from .models import User
+from books.models import Favority
+
+
+class DeleteFavorityBook(LoginRequiredMixin, View):
+
+    success_url = '/accounts/perfil/'
+
+    def get(self, request, pk2):
+        get_book = get_object_or_404(Favority, pk=pk2)
+        favority = Favority.objects.filter(id=get_book.pk, user=request.user)
+        favority.delete()
+        return redirect(self.success_url)
 
 
 class PasswordChangeUser(LoginRequiredMixin, PasswordChangeView):
@@ -51,6 +65,11 @@ class PerfilDetail(LoginRequiredMixin, DetailView):
 
     def get_object(self):
         return self.request.user
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['list_favoritys'] = Favority.objects.filter(user=self.request.user).all()
+        return context
 
 
 class CreateUser(CreateView):

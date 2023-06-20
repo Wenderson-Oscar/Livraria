@@ -1,9 +1,23 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView, DetailView
-from .models import Book, Like
+from .models import Book, Like, Favority
 from django.contrib.auth.mixins import LoginRequiredMixin
 from chat.models import Chat
+
+
+class AddFavorityBook(LoginRequiredMixin, View):
+
+    def get(self, request, pk):
+        get_book = get_object_or_404(Book, pk=pk)
+        print(get_book)
+        if Favority.objects.filter(user=self.request.user, book=get_book).count() == 0:
+            Favority.objects.create(user=self.request.user, book=get_book)
+        elif Favority.objects.filter(user=self.request.user, book=get_book).count() == 1:
+            fav = Favority.objects.filter(user=self.request.user, book=get_book)
+            fav.delete()
+        success_url = '/detail_book/' + str(pk)
+        return redirect(success_url)
 
 
 class ListBooks(ListView):
@@ -16,7 +30,7 @@ class ListBooks(ListView):
         return self.model.objects.order_by('-quant_like').all()
 
     def get_paginate_orphans(self) -> int:
-        return 10
+        return 5
 
 
 class ListOrderPublicationBooks(ListBooks):

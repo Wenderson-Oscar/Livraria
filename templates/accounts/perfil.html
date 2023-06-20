@@ -30,6 +30,16 @@
                         <a href="{% url 'delete_user' %}" class="btn btn-primary"> Excluir Conta </a>
                         <a href="{% url 'password_reset' %}" class="btn btn-primary"> Mudar Senha </a>
                     </div>
+                    <hr>
+                    <center>
+                        <h3> Livros Favoritos</h3>
+                    </center>
+                    {% for favority in list_favoritys %}
+                        <a href="{% url 'detail_book' pk=favority.book.pk %}"><img src="{{favority.book.cape.url}}" height="300px" width="350px"><br></a>
+                        {{favority.book}}
+                        <a href="{% url 'delete_favority' pk2=favority.pk %}" class="btn btn-danger btn-sm">Remove dos Favoritos</a>
+                        <hr>
+                    {% endfor %}
                 </div>
             </div>
         </div>
