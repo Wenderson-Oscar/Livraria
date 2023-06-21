@@ -10,6 +10,11 @@
                         <img src="{{book.cape.url}}" class="card-img" alt="Capa do Livro">
                     </div>
                     <div class="col-md-8">
+                        <div class="d-flex justify-content-end">
+                            <a d="favoriteBtn" href="{% url 'add_favority' pk=book.pk %}">
+                                <span id="favoriteBtn" class="far fa-star"></span>
+                            </a>
+                        </div>
                         <h2>{{book.title}}</h2>
                         {% for autor in book.author.all %}
                             <p><b>Autor:</b> {{autor.name}}</p>
@@ -19,13 +24,12 @@
                                 <button class="btn btn-primary disabled" type="button"> {{genero}}</button>
                             {% endfor %}
                             <br>
-                            <a href="{% url 'add_favority' pk=book.pk %}" class="btn btn-primary">Add Favorito</a><br>
                             <b>Quantidade de downloads </b> {{book.quant_downloads}}<br>
                             <b>Curtidas</b> {{book.quant_like}}
                             <br>
                             {% if user.is_authenticated %}
                                 <a href="{% url 'like_book' pk=book.pk %}">
-                                    <button class="btn btn-primary" type="button">Curtir</button>
+                                    <span id="likeBtn" class="far fa-thumbs-up like-icon" style="font-size: 24px;"></span>
                                 </a>
                             {% endif %}
                             <div class="table-responsive">
@@ -104,7 +108,7 @@
                     </form>
                     {% for comment in list_comment %}
                         {% if not comment.parent_comment %}
-                            <div class="card mb-3">
+                            <div class="card mb-3" style="background-color: #f0f0f0;">
                                 <div class="card-body">
                                     <div class="d-flex align-items-start mb-2">
                                         <div class="rounded-circle bg-secondary p-2 mr-2">
@@ -143,19 +147,24 @@
                                             <p class="card-text">Publicado em {{ comment.year_publication }}</p>
                                             <p class="card-text">Curtidas: {{ comment.quant_like }}</p>
                                             {% if user.is_authenticated %}
-                                                <a href="{% url 'add_like' pk1=comment.pk pk=book.pk %}" class="btn btn-primary">Curtir</a>
+                                                <a href="{% url 'add_like' pk1=comment.pk pk=book.pk %}">
+                                                    <span id="likeBtn" class="far fa-thumbs-up like-icon" style="font-size: 24px;"></span>
+                                                </a>
                                             {% endif %}
                                         </div>
                                     </div>
                                 </div>
-                                {% if comment.replies.all %}
-                                    {% for reply in comment.replies.all %}
-                                        <br>
-                                        <div class="flex-grow-1 ml-5">
+                            </div>
+                            {% if comment.replies.all %}
+                                <div class="card mb-3" style="background-color: #f0f0f0;"> <!-- Respostas -->
+                                    <div class="card-body">
+                                        {% for reply in comment.replies.all %}
                                             <div class="d-flex align-items-start mb-2">
-                                                {% if reply.author.perfil %}
-                                                    <img src="{{ reply.author.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
-                                                {% endif %}
+                                                <div class="rounded-circle bg-secondary p-2 mr-2">
+                                                    {% if reply.author.perfil %}
+                                                        <img src="{{ reply.author.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
+                                                    {% endif %}
+                                                </div>
                                                 <div class="flex-grow-1">
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <h5 class="card-title">{{ reply.author }}</h5>
@@ -187,31 +196,34 @@
                                                     <p class="card-text">Publicado em {{ reply.year_publication }}</p>
                                                     <p class="card-text">Curtidas: {{ reply.quant_like }}</p>
                                                     {% if user.is_authenticated %}
-                                                        <a href="{% url 'add_like' pk1=reply.pk pk=book.pk %}" class="btn btn-primary">Curtir</a>
+                                                        <a href="{% url 'add_like' pk1=reply.pk pk=book.pk %}">
+                                                            <span id="likeBtn" class="far fa-thumbs-up like-icon" style="font-size: 24px;"></span>
+                                                        </a>
                                                     {% endif %}
                                                 </div>
                                             </div>
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
-                                <form id="responseFormulario" method="post" action="{% url 'create_comment_response' pk1=comment.pk pk=book.pk %}">
-                                    {% csrf_token %}
-                                    <div class="input-group mb-3 ml-5">
-                                        <input type="text" name="response_msg" id="response_msg" class="form-control" placeholder="Digite seu Comentário">
-                                        <button class="btn btn-success" type="submit">Enviar</button>
-                                        <a href="{% url 'detail_book' pk=book.pk %}" class="btn btn-secondary" role="button">Cancelar</a>
+                                            <hr>
+                                        {% endfor %}
                                     </div>
-                                </form>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
+                                </div>
+                            {% endif %}
+                            <form id="responseFormulario" method="post" action="{% url 'create_comment_response' pk1=comment.pk pk=book.pk %}">
+                                {% csrf_token %}
+                                <div class="input-group mb-3 ml-5">
+                                    <input type="text" name="response_msg" id="response_msg" class="form-control" placeholder="Digite seu Comentário">
+                                    <button class="btn btn-success" type="submit">Enviar</button>
+                                    <a href="{% url 'detail_book' pk=book.pk %}" class="btn btn-secondary" role="button">Cancelar</a>
+                                </div>
+                            </form>
+                        {% endif %}
+                    {% endfor %}                    
             </div>
         </div>
     </div>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 <script>
     function toggleEditForm(commentId) {
         var commentText = document.getElementById("comment_text_" + commentId);
@@ -227,11 +239,42 @@
             editForm.style.display = "block";
             editButton.innerHTML = "Cancelar";
         }
-    }
-
+    };
     function generatePDF() {
         var element = document.getElementById("pdfContent");
         html2pdf().from(element).save();
     }
+    document.getElementById('favoriteBtn').addEventListener('click', function() {
+        if (this.classList.contains('far')) {
+            this.classList.remove('far');
+            this.classList.add('fas');
+            this.classList.add('text-warning');
+        } else {
+            this.classList.remove('fas');
+            this.classList.add('far');
+            this.classList.remove('text-warning');
+        }
+    });
+    document.getElementById('likeBtn').addEventListener('click', function() {
+        // Verifique se o botão atualmente tem a classe 'far' (coração vazio)
+        if (this.classList.contains('far')) {
+            // Remova a classe 'far' (coração vazio)
+            this.classList.remove('far');
+            // Adicione a classe 'fas' (coração cheio)
+            this.classList.add('fas');
+            // Adicione a classe 'text-primary' para definir a cor vermelha
+            this.classList.add('text-primary');
+            // Adicione aqui a lógica para quando o botão de curtir for clicado
+        } else {
+            // Caso contrário, o botão atualmente tem a classe 'fas' (coração cheio)
+            // Remova a classe 'fas' (coração cheio)
+            this.classList.remove('fas');
+            // Adicione a classe 'far' (coração vazio)
+            this.classList.add('far');
+            // Remova a classe 'text-primary' para voltar à cor padrão
+            this.classList.remove('text-primary');
+            // Adicione aqui a lógica para quando o botão de curtir for desmarcado
+        }
+    });
 </script>
 {% endblock %}
