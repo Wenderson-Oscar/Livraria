@@ -1,9 +1,12 @@
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 from django.views import View
 from django.views.generic import ListView, DetailView
 from .models import Book, Like, Favority
 from django.contrib.auth.mixins import LoginRequiredMixin
 from chat.models import Chat
+from django.core.paginator import Paginator, EmptyPage
+
 
 
 class AddFavorityBook(LoginRequiredMixin, View):
@@ -25,12 +28,28 @@ class ListBooks(ListView):
     model = Book
     template_name = 'books/list_books.html'
     context_object_name = 'books'
+    paginate_by = 10
+
 
     def get_queryset(self):
-        return self.model.objects.order_by('-quant_like').all()
-
-    def get_paginate_orphans(self) -> int:
-        return 5
+        queryset = super().get_queryset()
+        queryset = queryset.exclude(quant_like__isnull=True)
+        queryset = queryset.order_by('-quant_like')
+        return queryset
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        books = context['books']
+        paginator = Paginator(books, self.paginate_by)
+        page_number = self.request.GET.get('page')
+        try:
+            page_obj = paginator.get_page(page_number)
+        except EmptyPage:
+            raise Http404('Página solicitada não existe.')
+        except ValueError:
+            raise Http404('Número de página inválido.')
+        context['page_obj'] = page_obj
+        return context
 
 
 class ListOrderPublicationBooks(ListBooks):
