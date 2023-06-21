@@ -57,39 +57,6 @@
                                         window.location.href = "{% url 'count_downl' pk=book.pk %}";
                                     });
                                 </script>
-                                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
-                                <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js"></script>
-                                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf_viewer.min.css">
-                                <script>
-                                    var downloads = document.getElementById('downloads');
-                                    downloads.addEventListener('click', function() {
-                                        window.location.href = "{% url 'count_downl' pk=book.pk %}";
-                                    });
-                                    PDFJS.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js';
-                                    var url = '{{book.book.url}}';
-                                    PDFJS.getDocument(url).promise.then(function(pdf) {
-                                        var pageNumber = 1;
-                                        pdf.getPage(pageNumber).then(function(page) {
-                                            var scale = 1.5;
-                                            var viewport = page.getViewport({ scale: scale });
-
-                                            var canvas = document.createElement('canvas');
-                                            var context = canvas.getContext('2d');
-                                            canvas.height = viewport.height;
-                                            canvas.width = viewport.width;
-
-                                            var container = document.createElement('div');
-                                            container.appendChild(canvas);
-                                            document.body.appendChild(container);
-
-                                            var renderContext = {
-                                                canvasContext: context,
-                                                viewport: viewport
-                                            };
-                                            page.render(renderContext);
-                                        });
-                                    });
-                                </script>
                             {% endif %}
                             <div>
                                 <br>
@@ -156,7 +123,7 @@
                                 </div>
                             </div>
                             {% if comment.replies.all %}
-                                <div class="card mb-3" style="background-color: #f0f0f0;"> <!-- Respostas -->
+                                <div class="card mb-3" style="background-color: #f0f0f0;">
                                     <div class="card-body">
                                         {% for reply in comment.replies.all %}
                                             <div class="d-flex align-items-start mb-2">
@@ -216,65 +183,8 @@
                                 </div>
                             </form>
                         {% endif %}
-                    {% endfor %}                    
-            </div>
+                    {% endfor %} 
         </div>
     </div>
 </main>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-<script>
-    function toggleEditForm(commentId) {
-        var commentText = document.getElementById("comment_text_" + commentId);
-        var editForm = document.getElementById("edit_comment_" + commentId);
-        var editButton = document.getElementById("edit_msg_" + commentId);
-
-        if (commentText.style.display === "none") {
-            commentText.style.display = "block";
-            editForm.style.display = "none";
-            editButton.innerHTML = "Editar";
-        } else {
-            commentText.style.display = "none";
-            editForm.style.display = "block";
-            editButton.innerHTML = "Cancelar";
-        }
-    };
-    function generatePDF() {
-        var element = document.getElementById("pdfContent");
-        html2pdf().from(element).save();
-    }
-    document.getElementById('favoriteBtn').addEventListener('click', function() {
-        if (this.classList.contains('far')) {
-            this.classList.remove('far');
-            this.classList.add('fas');
-            this.classList.add('text-warning');
-        } else {
-            this.classList.remove('fas');
-            this.classList.add('far');
-            this.classList.remove('text-warning');
-        }
-    });
-    document.getElementById('likeBtn').addEventListener('click', function() {
-        // Verifique se o botão atualmente tem a classe 'far' (coração vazio)
-        if (this.classList.contains('far')) {
-            // Remova a classe 'far' (coração vazio)
-            this.classList.remove('far');
-            // Adicione a classe 'fas' (coração cheio)
-            this.classList.add('fas');
-            // Adicione a classe 'text-primary' para definir a cor vermelha
-            this.classList.add('text-primary');
-            // Adicione aqui a lógica para quando o botão de curtir for clicado
-        } else {
-            // Caso contrário, o botão atualmente tem a classe 'fas' (coração cheio)
-            // Remova a classe 'fas' (coração cheio)
-            this.classList.remove('fas');
-            // Adicione a classe 'far' (coração vazio)
-            this.classList.add('far');
-            // Remova a classe 'text-primary' para voltar à cor padrão
-            this.classList.remove('text-primary');
-            // Adicione aqui a lógica para quando o botão de curtir for desmarcado
-        }
-    });
-</script>
 {% endblock %}

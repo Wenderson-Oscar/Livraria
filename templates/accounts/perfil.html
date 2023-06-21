@@ -22,23 +22,29 @@
                                 {% else %}
                                     Não Informado<br>
                                 {% endif %}
-                                <b>E-mail</b>: {{perfil.email}}
+                                <b>E-mail:</b> {{perfil.email}}
                             </div>
                         </div>
                         <br>
-                        <a href="{% url 'update_user' %}" class="btn btn-primary"> Editar Perfil </a>
-                        <a href="{% url 'delete_user' %}" class="btn btn-primary"> Excluir Conta </a>
-                        <a href="{% url 'password_reset' %}" class="btn btn-primary"> Mudar Senha </a>
+                        <a href="{% url 'update_user' %}" class="btn btn-primary">Editar Perfil</a>
+                        <a href="{% url 'delete_user' %}" class="btn btn-primary">Excluir Conta</a>
+                        <a href="{% url 'password_reset' %}" class="btn btn-primary">Mudar Senha</a>
                     </div>
-                    <hr>
-                    <center>
-                        <h3> Livros Favoritos</h3>
-                    </center>
+                </div>
+                <hr>
+                <center>
+                    <h3>Livros Favoritos</h3>
+                </center>
+                <div class="row">
                     {% for favority in list_favoritys %}
-                        <a href="{% url 'detail_book' pk=favority.book.pk %}"><img src="{{favority.book.cape.url}}" height="300px" width="350px"><br></a>
-                        {{favority.book}}
-                        <a href="{% url 'delete_favority' pk2=favority.pk %}" class="btn btn-danger btn-sm">Remove dos Favoritos</a>
-                        <hr>
+                        <div class="col-md-4">
+                            <a href="{% url 'detail_book' pk=favority.book.pk %}">
+                                <img src="{{favority.book.cape.url}}" class="card-img" alt="Capa do Livro" height="300px" width="350px">
+                            </a>
+                            <br>
+                            {{favority.book}}
+                            <a href="{% url 'delete_favority' pk2=favority.pk %}" class="btn btn-danger btn-sm">Remover dos Favoritos</a>
+                        </div>
                     {% endfor %}
                 </div>
             </div>
