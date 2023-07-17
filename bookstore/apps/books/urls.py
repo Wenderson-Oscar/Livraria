@@ -1,9 +1,11 @@
 from bookstore.apps.books import views
 from django.urls import path
 
+app_name = 'books'
 
 urlpatterns = [
     path('', views.ListBooks.as_view(), name='list_books'),
+    path('delete/favority/<int:pk2>/', views.DeleteFavorityBook.as_view(), name='delete_favority'),
     path('add_book/favority/<int:pk>/', views.AddFavorityBook.as_view(), name='add_favority'),
     path('detail_book/<int:pk>/', views.DetailBook.as_view(), name='detail_book'),
     path('list_books/published/', views.ListOrderPublicationBooks.as_view(), name='list_books_order'),

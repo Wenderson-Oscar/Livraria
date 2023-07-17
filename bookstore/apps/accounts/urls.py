@@ -7,7 +7,6 @@ from django.urls import reverse_lazy
 app_name = 'accounts'
 
 urlpatterns = [
-    path('delete/favority/<int:pk2>/', views.DeleteFavorityBook.as_view(), name='delete_favority'),
     path('create/new/', views.CreateUser.as_view(), name='create_user'),
     path('delete/user/', views.DeleteUser.as_view(), name='delete_user'),
     path('update/user/', views.UpdateUser.as_view(), name='update_user'),

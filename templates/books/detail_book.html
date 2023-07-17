@@ -11,7 +11,7 @@
                     </div>
                     <div class="col-md-8">
                         <div class="d-flex justify-content-end">
-                            <a d="favoriteBtn" href="{% url 'add_favority' pk=book.pk %}">
+                            <a d="favoriteBtn" href="{% url 'books:add_favority' pk=book.pk %}">
                                 <span id="favoriteBtn" class="far fa-star"></span>
                             </a>
                         </div>
@@ -28,7 +28,7 @@
                             <b>Curtidas</b> {{book.quant_like}}
                             <br>
                             {% if user.is_authenticated %}
-                                <a href="{% url 'like_book' pk=book.pk %}">
+                                <a href="{% url 'books:like_book' pk=book.pk %}">
                                     <span id="likeBtn" class="far fa-thumbs-up like-icon" style="font-size: 24px;"></span>
                                 </a>
                             {% endif %}
@@ -54,7 +54,7 @@
                                 <script>
                                     var count_downl = document.getElementById('count_downl');
                                     count_downl.addEventListener('click', function() {
-                                        window.location.href = "{% url 'count_downl' pk=book.pk %}";
+                                        window.location.href = "{% url 'books:count_downl' pk=book.pk %}";
                                     });
                                 </script>
                             {% endif %}
@@ -65,12 +65,18 @@
                     </div>
                     <hr>
                     <h2>Comentar</h2>
-                    <form id="responseFormulario" method="post" action="{% url 'create_comment' pk=book.pk %}">
+                    <form id="responseFormulario" method="post" action="{% url 'chats:create_comment' pk=book.pk %}">
                         {% csrf_token %}
                         <div class="input-group mb-3">
                             <input type="text" name="comment" id="comment" class="form-control" placeholder="Junte-se ao Debate...">
-                            <button class="btn btn-success" type="submit">Enviar</button>
-                            <a href="{% url 'detail_book' pk=book.pk %}" class="btn btn-secondary" role="button">Cancelar</a>
+                            {% if user.is_authenticated %}
+                                <button class="btn btn-success" type="submit">Enviar</button>
+                            {% else %}
+                                <a class="btn btn-success" href="{% url 'accounts:create_user' %}">
+                                    Enviar
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'books:detail_book' pk=book.pk %}" class="btn btn-secondary" role="button">Cancelar</a>
                         </div>
                     </form>
                     {% for comment in list_comment %}
@@ -87,14 +93,14 @@
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <h5 class="card-title">{{ comment.author }}</h5>
                                                 {% if user == comment.author %}
-                                                    <a href="{% url 'delete_comment' pk=book.pk pk1=comment.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+                                                    <a href="{% url 'chats:delete_comment' pk=book.pk pk1=comment.pk %}" class="btn btn-danger btn-sm">Excluir</a>
                                                 {% endif %}
                                             </div>
                                             <p id="comment_text_{{ comment.pk }}" class="form-control">{{ comment.comment }}</p>
                                             {% if user == comment.author %}
                                                 <div id="comment_{{ comment.pk }}">
                                                     <div id="edit_comment_{{ comment.pk }}" {% if not edit %}style="display: none;"{% endif %}>
-                                                        <form id="editFormulario_{{ comment.pk }}" method="post" action="{% url 'update_comment' pk=book.pk pk1=comment.pk %}">
+                                                        <form id="editFormulario_{{ comment.pk }}" method="post" action="{% url 'chats:update_comment' pk=book.pk pk1=comment.pk %}">
                                                             {% csrf_token %}
                                                             <div class="input-group mb-3">
                                                                 {% if not edit %}
@@ -114,7 +120,7 @@
                                             <p class="card-text">Publicado em {{ comment.year_publication }}</p>
                                             <p class="card-text">Curtidas: {{ comment.quant_like }}</p>
                                             {% if user.is_authenticated %}
-                                                <a href="{% url 'add_like' pk1=comment.pk pk=book.pk %}">
+                                                <a href="{% url 'chats:add_like' pk1=comment.pk pk=book.pk %}">
                                                     <span id="likeBtn" class="far fa-thumbs-up like-icon" style="font-size: 24px;"></span>
                                                 </a>
                                             {% endif %}
@@ -126,7 +132,7 @@
                                 <div class="card mb-3" style="background-color: #f0f0f0;">
                                     <div class="card-body">
                                         {% for reply in comment.replies.all %}
-                                            <div class="d-flex align-items-start mb-2">
+                                            <div class="d-flex align-items-start mb-2 ml-5">
                                                 <div class="rounded-circle bg-secondary p-2 mr-2">
                                                     {% if reply.author.perfil %}
                                                         <img src="{{ reply.author.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
@@ -136,14 +142,14 @@
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <h5 class="card-title">{{ reply.author }}</h5>
                                                         {% if user == reply.author %}
-                                                            <a href="{% url 'delete_comment' pk=book.pk pk1=reply.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+                                                            <a href="{% url 'chats:delete_comment' pk=book.pk pk1=reply.pk %}" class="btn btn-danger btn-sm">Excluir</a>
                                                         {% endif %}
                                                     </div>
                                                     <p id="comment_text_{{ reply.pk }}" class="form-control">{{ reply.comment }}</p>
                                                     {% if user == reply.author %}
                                                         <div id="comment_{{ reply.pk }}">
                                                             <div id="edit_comment_{{ reply.pk }}" {% if not edit %}style="display: none;"{% endif %}>
-                                                                <form id="editFormulario_{{ reply.pk }}" method="post" action="{% url 'update_comment' pk=book.pk pk1=reply.pk %}">
+                                                                <form id="editFormulario_{{ reply.pk }}" method="post" action="{% url 'chats:update_comment' pk=book.pk pk1=reply.pk %}">
                                                                     {% csrf_token %}
                                                                     <div class="input-group mb-3">
                                                                         {% if not edit %}
@@ -163,7 +169,7 @@
                                                     <p class="card-text">Publicado em {{ reply.year_publication }}</p>
                                                     <p class="card-text">Curtidas: {{ reply.quant_like }}</p>
                                                     {% if user.is_authenticated %}
-                                                        <a href="{% url 'add_like' pk1=reply.pk pk=book.pk %}">
+                                                        <a href="{% url 'chats:add_like' pk1=reply.pk pk=book.pk %}">
                                                             <span id="likeBtn" class="far fa-thumbs-up like-icon" style="font-size: 24px;"></span>
                                                         </a>
                                                     {% endif %}
@@ -174,16 +180,24 @@
                                     </div>
                                 </div>
                             {% endif %}
-                            <form id="responseFormulario" method="post" action="{% url 'create_comment_response' pk1=comment.pk pk=book.pk %}">
+                            <form id="responseFormulario" method="post" action="{% url 'chats:create_comment_response' pk1=comment.pk pk=book.pk %}">
                                 {% csrf_token %}
                                 <div class="input-group mb-3 ml-5">
                                     <input type="text" name="response_msg" id="response_msg" class="form-control" placeholder="Digite seu Comentário">
-                                    <button class="btn btn-success" type="submit">Enviar</button>
-                                    <a href="{% url 'detail_book' pk=book.pk %}" class="btn btn-secondary" role="button">Cancelar</a>
+                                    {% if user.is_authenticated %}
+                                        <button class="btn btn-success" type="submit">Enviar</button>
+                                    {% else %}
+                                        <a class="btn btn-success" href="{% url 'accounts:create_user' %}">
+                                            Enviar
+                                        </a>
+                                    {% endif %}
+                                    <a href="{% url 'books:detail_book' pk=book.pk %}" class="btn btn-secondary" role="button">Cancelar</a>
                                 </div>
                             </form>
                         {% endif %}
                     {% endfor %} 
+                </div>
+            </div>
         </div>
     </div>
 </main>

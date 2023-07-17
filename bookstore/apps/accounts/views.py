@@ -1,5 +1,3 @@
-from django.shortcuts import get_object_or_404, redirect
-from django.views import View
 from django.views.generic import CreateView, DetailView, DeleteView, UpdateView
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
@@ -19,17 +17,6 @@ class RecoverPassword(SuccessMessageMixin, PasswordResetView):
     subject_template_name = 'accounts/recover_password_object'
     success_message = 'Enviamos um e-mail com instruções para definir sua senha.'
     success_url = reverse_lazy('accounts:login_user')
-
-
-class DeleteFavorityBook(LoginRequiredMixin, View):
-
-    success_url = '/accounts/perfil/'
-
-    def get(self, request, pk2):
-        get_book = get_object_or_404(Favority, pk=pk2)
-        favority = Favority.objects.filter(id=get_book.pk, user=request.user)
-        favority.delete()
-        return redirect(self.success_url)
 
 
 class PasswordChangeUser(LoginRequiredMixin, PasswordChangeView):
@@ -56,7 +43,7 @@ class DeleteUser(LoginRequiredMixin, DeleteView):
 
     model = User
     template_name = 'accounts/delete_user.html'
-    success_url = reverse_lazy('list_books')
+    success_url = reverse_lazy('books:list_books')
 
     def set_valid_delete(self):
         self.request.user.delete()
@@ -72,7 +59,7 @@ class PerfilDetail(LoginRequiredMixin, DetailView):
 
     model = User
     template_name = 'accounts/perfil.html'
-    context_object_name = 'accounts:perfil'
+    context_object_name = 'perfil'
 
     def get_object(self):
         return self.request.user
@@ -95,7 +82,7 @@ class Login(LoginView):
     template_name = 'accounts/login_user.html'
     authentication_form = AuthenticationForm
     redirect_authenticated_user = True
-    success_url = reverse_lazy('list_books')
+    success_url = reverse_lazy('books:list_books')
 
     def get_success_url(self) -> str:
         return self.success_url
@@ -103,4 +90,4 @@ class Login(LoginView):
 
 class Logout(LoginRequiredMixin, LogoutView):
 
-    next_page = reverse_lazy('list_books')
+    next_page = reverse_lazy('books:list_books')

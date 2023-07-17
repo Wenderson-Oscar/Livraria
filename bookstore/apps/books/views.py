@@ -8,6 +8,16 @@ from bookstore.apps.chat.models import Chat
 from django.core.paginator import Paginator, EmptyPage
 
 
+class DeleteFavorityBook(LoginRequiredMixin, View):
+
+    success_url = '/accounts/perfil/'
+
+    def get(self, request, pk2):
+        get_book = get_object_or_404(Favority, pk=pk2)
+        favority = Favority.objects.filter(id=get_book.pk, user=request.user)
+        favority.delete()
+        return redirect(self.success_url)
+    
 
 class AddFavorityBook(LoginRequiredMixin, View):
 

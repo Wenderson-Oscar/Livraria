@@ -1,6 +1,8 @@
 from bookstore.apps.chat import views
 from django.urls import path
 
+app_name = 'chats'
+
 urlpatterns = [
     path('edit_messages/<int:pk>/<int:pk1>/', views.UpdateComment.as_view(), name='update_comment'),
     path('delete_comment/<int:pk>/<int:pk1>/', views.DeleteComment.as_view(), name='delete_comment'),

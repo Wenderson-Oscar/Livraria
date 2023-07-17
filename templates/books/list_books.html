@@ -12,7 +12,7 @@
             {% for book in books.all %}
             <div class="col-md-3">
                 <table class="table-responsive">
-                    <a href="{% url 'detail_book' pk=book.id %}">
+                    <a href="{% url 'books:detail_book' pk=book.id %}">
                     <img src="{{book.cape.url}}" height="190px" width="140px" alt="Capa da Imagem"><br>
                     <b>Nome:</b> {{book.title}}<br>
                     {% for autor in book.author.all %}
@@ -20,7 +20,7 @@
                     {% endfor %}
                     </a>
                     <br>
-                    <a href="{% url 'detail_book' pk=book.id %}">
+                    <a href="{% url 'books:detail_book' pk=book.id %}">
                         <button class="btn btn-primary disabled" type="submit">Abrir</button>
                     </a>
                 </table>

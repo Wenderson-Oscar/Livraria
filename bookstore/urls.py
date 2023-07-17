@@ -22,7 +22,7 @@ from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('bookstore.apps.books.urls')),
+    path('', include('bookstore.apps.books.urls', namespace='books')),
     path('accounts/', include('bookstore.apps.accounts.urls', namespace='accounts')),
-    path('chat/', include('bookstore.apps.chat.urls')),
+    path('chat/', include('bookstore.apps.chat.urls', namespace='chats')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

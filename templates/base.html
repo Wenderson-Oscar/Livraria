@@ -32,15 +32,15 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-                <a class="navbar-brand" href="{% url 'list_books' %}">
+                <a class="navbar-brand" href="{% url 'books:list_books' %}">
                     <img src="{% static 'icons/book.png' %}" height="20px" width="50px">
                 </a>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'list_books' %}">Livros</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'books:list_books' %}">Livros</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'list_books_order' %}">Lancamentos</a>
+                        <a class="nav-link" href="{% url 'books:list_books_order' %}">Lancamentos</a>
                     </li>
                     {% if not user.is_authenticated %}
                     <li class="nav-item">
