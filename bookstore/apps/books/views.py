@@ -39,8 +39,8 @@ class ListBooks(ListView):
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        queryset = self.get_queryset()  # Obtém a consulta original
-        paginator = Paginator(queryset, self.paginate_by)  # Passa a consulta original para o Paginator
+        queryset = self.get_queryset()  
+        paginator = Paginator(queryset, self.paginate_by)
         page_number = self.request.GET.get('page')
         try:
             page_obj = paginator.get_page(page_number)

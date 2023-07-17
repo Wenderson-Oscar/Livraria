@@ -4,6 +4,11 @@
     <div class="card text-center">
         <div class="card-body" >
             <h2 class="card-title">Login</h2>
+            {% if messages %}
+              {% for message in messages %}
+                <li class="{{ message.tags }}">{% if message.tags == "error" %}<strong>Erro:</strong> {% endif %}{{ message }}</li>
+              {% endfor %}
+            {% endif %}
             <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{form}}
@@ -11,6 +16,7 @@
                 <div class="d-grid">
                     <button class="btn btn-primary" type="submit">Login</button>
                 </div>
+                <a href="{% url 'accounts:recover_password' %}">Esqueceu sua senha?</a>
             </form>
         </div>
     </div>

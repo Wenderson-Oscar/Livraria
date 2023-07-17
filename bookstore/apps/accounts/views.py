@@ -8,6 +8,17 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from bookstore.apps.accounts.forms import CreateUserForms
 from bookstore.apps.accounts.models import User
 from bookstore.apps.books.models import Favority
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
+
+
+class RecoverPassword(SuccessMessageMixin, PasswordResetView):
+    
+    template_name = 'accounts/recover_password.html'
+    email_template_name = 'accounts/recover_password_email.html'
+    subject_template_name = 'accounts/recover_password_object'
+    success_message = 'Enviamos um e-mail com instruções para definir sua senha.'
+    success_url = reverse_lazy('accounts:login_user')
 
 
 class DeleteFavorityBook(LoginRequiredMixin, View):
@@ -23,8 +34,8 @@ class DeleteFavorityBook(LoginRequiredMixin, View):
 
 class PasswordChangeUser(LoginRequiredMixin, PasswordChangeView):
 
-    template_name = 'accounts/password_reset.html'
-    success_url = reverse_lazy('perfil')
+    template_name = 'accounts/password_reset_update.html'
+    success_url = reverse_lazy('accounts:perfil')
 
     def get_object(self):
         return self.request.user.id
@@ -61,7 +72,7 @@ class PerfilDetail(LoginRequiredMixin, DetailView):
 
     model = User
     template_name = 'accounts/perfil.html'
-    context_object_name = 'perfil'
+    context_object_name = 'accounts:perfil'
 
     def get_object(self):
         return self.request.user
@@ -76,7 +87,7 @@ class CreateUser(CreateView):
 
     template_name = 'accounts/create.html'
     form_class = CreateUserForms
-    success_url = reverse_lazy('login_user')
+    success_url = reverse_lazy('accounts:login_user')
 
 
 class Login(LoginView):
