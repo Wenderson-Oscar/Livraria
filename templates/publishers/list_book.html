@@ -21,14 +21,6 @@
             <a href="{% url 'publishers:detail_book_publishers' pk=books_p.pk %}">Detalhar</a>
             <hr>
         {% endfor %}
-    </ul>
-    <script>
-        setTimeout(function() {
-            var alertDiv = document.getElementById('alert-div');
-            if (alertDiv) {
-                alertDiv.style.display = 'none';
-            }
-        }, 3000);
-    </script>
+    </ul>   
 </main>
 {% endblock %}

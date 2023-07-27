@@ -1,17 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
 <main>
-    <head>
-        <style>
-        .message-fadeout {
-            animation: fadeOut 5s; 
-        }
-        @keyframes fadeOut {
-            0% { opacity: 1; }
-            100% { opacity: 0; }
-        }
-        </style>
-    </head>
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }} message-fadeout">
