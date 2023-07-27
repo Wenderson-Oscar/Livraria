@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+    <h1>Detalhar Livro</h1>
+    <ul>
+        {% if messages %}
+            {% for message in messages %}
+                <div id="alert-div" class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        <li>{{ detail_b.title }}</li>
+        <img src="{{ detail_b.cape.url }}" alt="{{ detail_b.title }}">
+        {{detail_b.sinopse}}
+        {{detail_b.year_publication}}
+        {{detail_b.quant_like}}
+        {{detail_b.quant_downloads}}
+        {% for author_b in detail_b.author.all %}
+                {{author_b}}
+        {% endfor %}
+        {% for gender_b in detail_b.gender.all %}
+                {{gender_b}}
+        {% endfor %}
+        <a href="{% url 'publishers:update_book_publishers' pk=object.pk %}">Editar</a>
+        <form action="{% url 'publishers:delete_book_publishers' pk=object.pk %}" method="post" onsubmit="return confirmDelete()">
+            {% csrf_token %}
+            <button type="submit">Excluir</button>
+        </form>
+
+        <script>
+        function confirmDelete() {
+            return confirm("Tem certeza que deseja excluir este livro?");
+        }
+        setTimeout(function() {
+            var alertDiv = document.getElementById('alert-div');
+            if (alertDiv) {
+                alertDiv.style.display = 'none';
+            }
+        }, 3000);
+
+        </script>
+    </ul>
+{% endblock %}

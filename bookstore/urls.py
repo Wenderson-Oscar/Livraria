@@ -25,4 +25,5 @@ urlpatterns = [
     path('', include('bookstore.apps.books.urls', namespace='books')),
     path('accounts/', include('bookstore.apps.accounts.urls', namespace='accounts')),
     path('chat/', include('bookstore.apps.chat.urls', namespace='chats')),
+    path('publishers/', include('bookstore.apps.publishers.urls', namespace='publishers')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

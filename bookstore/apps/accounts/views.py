@@ -15,7 +15,7 @@ class RecoverPassword(SuccessMessageMixin, PasswordResetView):
     template_name = 'accounts/recover_password.html'
     email_template_name = 'accounts/recover_password_email.html'
     subject_template_name = 'accounts/recover_password_object'
-    success_message = 'Enviamos um e-mail com instruções para definir sua senha.'
+    success_message = 'Enviamos um e-mail com instruções para redefinir sua senha.'
     success_url = reverse_lazy('accounts:login_user')
 
 

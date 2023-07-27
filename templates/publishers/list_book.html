@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<main>
+    <h1>Listar Livros Da Editora</h1>
+    <ul>
+        <a href="{% url 'publishers:create_book' %}">Criar</a>
+        <br>
+        {% if messages %}
+            {% for message in messages %}
+                <div id="alert-div" class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% for books_p in books_list_publishers %}
+            <img src="{{ books_p.cape.url }}" alt="{{ books_p.title }}">
+            <li>{{ books_p.title }}</li>
+            {% for author in books_p.author.all %}
+                <li>{{ author }}</li>
+            {% endfor %}
+            <a href="{% url 'publishers:detail_book_publishers' pk=books_p.pk %}">Detalhar</a>
+            <hr>
+        {% endfor %}
+    </ul>
+    <script>
+        setTimeout(function() {
+            var alertDiv = document.getElementById('alert-div');
+            if (alertDiv) {
+                alertDiv.style.display = 'none';
+            }
+        }, 3000);
+    </script>
+</main>
+{% endblock %}

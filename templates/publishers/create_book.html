@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<main>
+    <head>
+        <style>
+        .message-fadeout {
+            animation: fadeOut 5s; 
+        }
+        @keyframes fadeOut {
+            0% { opacity: 1; }
+            100% { opacity: 0; }
+        }
+        </style>
+    </head>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} message-fadeout">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <h1>Publicar Livro</h1>
+    <a href="{% url 'publishers:list_book_publishers' %}">Voltar</a>
+    <form method="POST" action="{% url 'publishers:create_book' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Publicar</button>
+    </form>
+    <br>
+    <h1>Criar Autor</h1>
+    <form method="POST" action="{% url 'publishers:create_author' %}">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Nome">
+        <button type="submit">Criar</button>
+    </form>
+    <h1>Criar Gênero</h1>
+    <form method="POST" action="{% url 'publishers:create_gender' %}">
+        {% csrf_token %}
+        <input type="text" name="gender" placeholder="Nome">
+        <button type="submit">Criar</button>
+    </form>
+</main>
+{% endblock %}  

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'bookstore.apps.books',
     'bookstore.apps.accounts',
     'bookstore.apps.chat',
+    'bookstore.apps.publishers',
 ]
 
 MIDDLEWARE = [
