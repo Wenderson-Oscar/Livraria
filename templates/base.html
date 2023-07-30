@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
-{% load user_tags %}
+{% load group_tags %}
 <html lang="pt-br">
 
 <head>
@@ -54,9 +54,13 @@
                     {% endif %}
                 </ul>
                 <form class="d-flex" role="buscar">
-                    {% if user.is_authenticated and user|is_in_group or user.is_staff %}
+                    {% if user.is_authenticated and user.is_superuser and user.is_staff or user.is_authenticated and user|is_group %}
                         <a class="btn btn-outline-primary" href="{% url 'groups:list_groups' %}">Grupos</a>
-                        <a class="btn btn-outline-primary" href="{% url 'publishers:list_book_publishers' %}">Editores</a>
+                        <a class="btn btn-outline-primary" href="{% url 'publishers:list_book_publishers' %}">Grupo</a>
+                    {% elif user.is_authenticated %}
+                        <a class="btn btn-outline-primary" href="{% url 'groups:list_groups' %}">Grupos</a>
+                    {% endif %}
+                    {% if user.is_authenticated %}
                         <a class="btn btn-outline-primary" href="{% url 'accounts:perfil' %}">Perfil</a>
                     {% endif %}
                     <input class="form-control me-2" type="buscar" placeholder="buscar" aria-label="buscar">

@@ -21,6 +21,8 @@
         {% for gender_b in detail_b.gender.all %}
                 {{gender_b}}
         {% endfor %}
+        {{detail_b.group}}
+        <br>
         <a href="{% url 'publishers:update_book_publishers' pk=object.pk %}">Editar</a>
         <form action="{% url 'publishers:delete_book_publishers' pk=object.pk %}" method="post" onsubmit="return confirmDeleteBook()">
             {% csrf_token %}

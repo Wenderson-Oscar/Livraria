@@ -25,6 +25,9 @@
                                     {% endif %}
                                 </div>
                                 <div class="mb-3">
+                                    <b>Participando da Scan:</b> {% if perfil.group %} {{perfil.group}} {% else %} <span class="text-muted">Não Participa de Nenhum</span> {% endif %}
+                                </div>
+                                <div class="mb-3">
                                     <b>E-mail:</b> {{perfil.email}}
                                 </div>
                             </div>

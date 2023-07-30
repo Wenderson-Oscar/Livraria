@@ -73,7 +73,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
             ],
             'libraries':{
-                'user_tags': 'bookstore.templatestags.user_tags',
+                'group_tags': 'bookstore.templatestags.group_tags',
             }
         },
     },

@@ -1,12 +1,37 @@
 from django.contrib.auth.models import Group
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView, View
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.utils.decorators import method_decorator
 from bookstore.apps.accounts.models import User
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail
+from django.urls import reverse
+from django.shortcuts import redirect
+
+
+class AskedParticipateEmailGroup(LoginRequiredMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        name_group = request.GET.get('group_name')
+        user_admin_group = User.objects.filter(groups__name=name_group, is_superuser=True, is_active=True).first()
+
+        if user_admin_group:
+            get_email_user = self.request.user.email
+            get_name_user = self.request.user.name
+            subject = f'Participar do Grupo {name_group}'
+            message = f'Olá {user_admin_group.username}, Meu nick é {get_name_user}, email: {get_email_user} gostaria de participar do grupo {name_group}!'
+            from_email = user_admin_group.email
+            recipient_list = [user_admin_group.email]
+            send_mail(subject, message, from_email, recipient_list)
+
+            messages.success(self.request, 'Email enviado com sucesso!')
+        else:
+            messages.error(self.request, 'Ocorreu um erro ao enviar o email.')
+
+        return redirect(reverse('groups:list_groups'))
 
 
 @method_decorator(permission_required('is_staff'), name='dispatch')

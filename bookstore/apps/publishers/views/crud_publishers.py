@@ -5,6 +5,7 @@ from bookstore.apps.books.models import Book, Author, Gender
 from bookstore.apps.publishers.forms import CreateBookForm
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.contrib.auth.models import Group
 
 
 class CreatePublishersBook(LoginRequiredMixin, CreateView):
@@ -12,6 +13,11 @@ class CreatePublishersBook(LoginRequiredMixin, CreateView):
     form_class = CreateBookForm
     template_name = 'publishers/create_book.html'
     success_url = '/publishers/list/'
+
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['user'] = self.request.user
+        return kwargs
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -24,6 +30,12 @@ class ListPublishersBook(LoginRequiredMixin, ListView):
     model = Book
     template_name = 'publishers/list_book.html'
     context_object_name = 'books_list_publishers'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        group = self.request.user.groups.first()
+        context['group'] = self.model.objects.filter(group=group)
+        return context
 
 
 class DetailPublishersBook(LoginRequiredMixin, DetailView):
@@ -38,7 +50,7 @@ class UpdatePublishersBook(LoginRequiredMixin, UpdateView):
     model = Book
     fields = ['title', 'cape', 'sinopse', 'year_publication', 'book', 'author', 'gender']
     template_name = 'publishers/update_book.html'
-    
+
     def get_success_url(self):
         messages.success(self.request, 'Livro Atualizado com Sucesso!')
         return '/publishers/detail/' + str(self.object.pk) + '/'
@@ -54,6 +66,7 @@ class DeletePublishersBook(LoginRequiredMixin, DeleteView):
         response = super().form_valid(form)
         messages.success(self.request, 'Livro Deletado com Sucesso!')
         return response
+
 
 class CreateAuthor(LoginRequiredMixin, CreateView):
 

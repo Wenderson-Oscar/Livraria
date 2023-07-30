@@ -1,14 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
-{% load user_tags %}
+{% load group_tags %}
 <main>
     {% if user.is_staff and user.is_authenticated and user.is_superuser %}
         <h1>Listar Grupos</h1>
         <ul>
-            {% if user.is_staff and user.is_authenticated and user.is_superuser %}
-                <a href="{% url 'groups:create_group' %}">Criar</a>
-            {% endif %}
-            <br>
+            <a href="{% url 'groups:create_group' %}">Criar</a>
+            <hr>
             {% if messages %}
                 {% for message in messages %}
                     <div id="alert-div" class="alert alert-{{ message.tags }}">
@@ -22,10 +20,19 @@
                 <hr>
             {% endfor %}
         </ul>
-    {% elif user.is_authenticated and user|is_in_group %}
+    {% elif user.is_authenticated %}
+        <h2>Listar de Editores</h2>
+        {% if messages %}
+                {% for message in messages %}
+                    <div id="alert-div" class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
         {% for group in groups_list %}
             <li>{{ group.name }}</li>
-            {% if user.is_authenticated and user|is_in_group %}
+            <a href="{% url 'permissions:asked_participate_email_group' %}?group_name={{ group.name }}">Pedir Para Entrar</a>
+            {% if user.is_authenticated and user|is_in_group:group.name %}
                 <a href="{% url 'groups:detail_group' pk=group.pk %}">Detalhar</a>
             {% endif %}
             <hr>

@@ -19,6 +19,7 @@
                         {% for autor in book.author.all %}
                             <p><b>Autor:</b> {{autor.name}}</p>
                         {% endfor %}
+                        <p><b>Editora:</b> {% if book.group %} {{book.group}} {% else %} Não Afiliado {% endif %} </p>
                         <p><b>Gênero:</b>
                             {% for genero in book.gender.all %}
                                 <button class="btn btn-primary disabled" type="button"> {{genero}}</button>

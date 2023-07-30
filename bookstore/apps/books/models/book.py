@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import Group
 
 
 class Author(models.Model):
@@ -28,6 +29,7 @@ class Book(models.Model):
     quant_downloads = models.IntegerField(verbose_name='Quantidade de Downloads', blank=True, default=0)
     author = models.ManyToManyField(Author)
     gender = models.ManyToManyField(Gender)
+    group = models.ForeignKey(Group, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.title
