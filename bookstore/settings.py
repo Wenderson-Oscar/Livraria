@@ -72,6 +72,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+            'libraries':{
+                'user_tags': 'bookstore.templatestags.user_tags',
+            }
         },
     },
 ]

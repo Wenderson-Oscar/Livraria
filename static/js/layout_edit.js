@@ -13,3 +13,18 @@ function toggleEditForm(commentId) {
         editButton.innerHTML = "Cancelar";
     }
 };
+function showForm() {
+    var groupInfo = document.getElementById('group-info');
+    var editForm = document.getElementById('edit-form');
+    var editButton = document.getElementById('edit-button');
+
+    if (groupInfo.style.display === 'none') {
+        groupInfo.style.display = 'block';
+        editForm.style.display = 'none';
+        editButton.innerText = 'Editar';
+    } else {
+        groupInfo.style.display = 'none';
+        editForm.style.display = 'block';
+        editButton.innerText = 'Cancelar';
+    }
+}

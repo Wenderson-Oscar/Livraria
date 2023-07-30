@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block content %}
+<main>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} message-fadeout">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    {% if user.is_staff %}
+        <h1>Adicionar Administrador ao Grupo</h1>
+    {% else %}
+        <h1>Adicionar Usuário ao Grupo | {{ object.name }}</h1>
+    {% endif %}
+    <form action="{% if user.is_staff %}{% url 'permissions:add_admin_group' pk=object.pk %}{% else %}{% url 'permissions:add_user_group' pk=object.pk %}{% endif %}" method="post">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="user">Usuário</label>
+            <select name="user" id="user" class="form-control">
+                {% for user in users %}
+                    <option value="{{ user.pk }}">{{ user }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Adicionar</button>
+    </form>
+    <a href="{% url 'groups:detail_group' pk=object.pk %}">Voltar</a>
+</main>
+{% endblock %}

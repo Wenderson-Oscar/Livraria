@@ -21,9 +21,11 @@ from django.conf import settings
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', include('bookstore.apps.books.urls', namespace='books')),
+    path('admin/', admin.site.urls),
     path('accounts/', include('bookstore.apps.accounts.urls', namespace='accounts')),
     path('chat/', include('bookstore.apps.chat.urls', namespace='chats')),
-    path('publishers/', include('bookstore.apps.publishers.urls', namespace='publishers')),
+    path('publishers/', include('bookstore.apps.publishers.urls.publishers', namespace='publishers')),
+    path('admins/groups/', include('bookstore.apps.publishers.urls.groups', namespace='groups')),
+    path('admins/permissions/', include('bookstore.apps.publishers.urls.permissions', namespace='permissions')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

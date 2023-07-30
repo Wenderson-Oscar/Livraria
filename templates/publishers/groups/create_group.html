@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<main>
+    <h1>Criar Grupo e da tipos de Permissões</h1>
+    <form method="post" action="{% url 'groups:create_group' %}">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type="submit" class="btn btn-primary">Criar</button>
+        <a href="{% url 'groups:list_groups' %}" class="btn btn-secondary">Voltar</a>
+    </form>
+</main>
+{% endblock %}
