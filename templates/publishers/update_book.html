@@ -1,11 +1,45 @@
 {% extends 'base.html' %}
 {% block content %}
-    <h1>Editar Livro</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{form.as_p}}
-        <br>
-        <button class="btn btn-success" type="submit">Salvar</button>
-        <button class="btn btn-secondary" type="button" onclick="history.back()">Cancelar</button>
-    </form>
+<main class="container">
+    <div class="card mt-4">
+        <div class="card-body">
+            <h1 class="card-title">Editar Livro</h1>
+            <div class="row">
+                <div class="col-md-6">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="{{ form.title.id_for_label }}">Título:</label>
+                            {{ form.title }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.cape.id_for_label }}">Capa:</label>
+                            {{ form.cape }}
+                        </div>
+                        <div class="form-group">
+                            <label for="{{ form.sinopse.id_for_label }}">Sinopse:</label>
+                            {{ form.sinopse }}
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                            <button class="btn btn-success mr-2" type="submit">Salvar</button>
+                            <button class="btn btn-secondary" type="button" onclick="history.back()">Cancelar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-body">
+                            <img src="{{ form.cape.value.url }}" class="img-fluid mb-3" alt="Capa do Livro">
+                            <ul class="list-unstyled">
+                                <li><strong>Título:</strong> {{ form.title.value }}</li>
+                                <li><strong>Sinopse:</strong> {{ form.sinopse.value }}</li>
+                                <li><strong>Ano de Publicação:</strong> {{ form.year_publication.value }}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
 {% endblock %}

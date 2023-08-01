@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block content %}
-<main>
+<main class="container">
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }} message-fadeout">
@@ -8,25 +8,56 @@
             </div>
         {% endfor %}
     {% endif %}
-    <h1>Publicar Livro</h1>
-    <a href="{% url 'publishers:list_book_publishers' %}">Voltar</a>
-    <form method="POST" action="{% url 'publishers:create_book' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Publicar</button>
-    </form>
-    <br>
-    <h1>Criar Autor</h1>
-    <form method="POST" action="{% url 'publishers:create_author' %}">
-        {% csrf_token %}
-        <input type="text" name="name" placeholder="Nome">
-        <button type="submit">Criar</button>
-    </form>
-    <h1>Criar Gênero</h1>
-    <form method="POST" action="{% url 'publishers:create_gender' %}">
-        {% csrf_token %}
-        <input type="text" name="gender" placeholder="Nome">
-        <button type="submit">Criar</button>
-    </form>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h1 class="card-title">Publicar Livro</h1>
+                    <a href="{% url 'publishers:list_book_publishers' %}" class="btn btn-secondary">Voltar</a>
+                    <form method="POST" action="{% url 'publishers:create_book' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <button type="submit" class="btn btn-primary mt-3">Publicar</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h1 class="card-title">Criar Autor</h1>
+                            <form method="POST" action="{% url 'publishers:create_author' %}">
+                                {% csrf_token %}
+                                <div class="input-group mb-3">
+                                    <input type="text" name="name" class="form-control" placeholder="Nome">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-success">Criar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-4">
+                        <div class="card-body">
+                            <h1 class="card-title">Criar Gênero</h1>
+                            <form method="POST" action="{% url 'publishers:create_gender' %}">
+                                {% csrf_token %}
+                                <div class="input-group mb-3">
+                                    <input type="text" name="gender" class="form-control" placeholder="Nome">
+                                    <div class="input-group-append">
+                                        <button type="submit" class="btn btn-success">Criar</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
-{% endblock %}  
+{% endblock %}

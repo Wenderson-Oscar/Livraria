@@ -34,46 +34,53 @@
         <div class="container-fluid">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01"
                 aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <i class="fas fa-bars"></i>
             </button>
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                 <a class="navbar-brand" href="{% url 'books:list_books' %}">
-                    <img src="{% static 'icons/book.png' %}" height="20px" width="50px">
+                    <img src="{% static 'icons/book.png' %}" height="20px" width="50px" alt="Livraria Web">
                 </a>
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{% url 'books:list_books' %}">Livros</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'books:list_books' %}" title="Ver todos os livros">Todos os Livros</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'books:list_books_order' %}">Lancamentos</a>
+                        <a class="nav-link" href="{% url 'books:list_books_order' %}" title="Ver lançamentos">Lançamentos</a>
                     </li>
                     {% if not user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:create_user' %}">Registrar</a>
+                            <a class="nav-link" href="{% url 'accounts:create_user' %}" title="Registrar-se">Registrar</a>
                         </li>
                     {% endif %}
                 </ul>
                 <form class="d-flex" role="buscar">
                     {% if user.is_authenticated and user.is_superuser and user.is_staff or user.is_authenticated and user|is_group %}
-                        <a class="btn btn-outline-primary" href="{% url 'groups:list_groups' %}">Grupos</a>
-                        <a class="btn btn-outline-primary" href="{% url 'publishers:list_book_publishers' %}">Grupo</a>
+                        <a class="btn btn-outline-primary me-2" href="{% url 'groups:list_groups' %}" title="Ver grupos">Grupos</a>
+                        <a class="btn btn-outline-primary me-2" href="{% url 'publishers:list_book_publishers' %}" title="Ver grupo">Grupo</a>
                     {% elif user.is_authenticated %}
-                        <a class="btn btn-outline-primary" href="{% url 'groups:list_groups' %}">Grupos</a>
+                        <a class="btn btn-outline-primary me-2" href="{% url 'groups:list_groups' %}" title="Ver grupos">Grupos</a>
                     {% endif %}
                     {% if user.is_authenticated %}
-                        <a class="btn btn-outline-primary" href="{% url 'accounts:perfil' %}">Perfil</a>
+                        <a class="btn btn-outline-primary me-2" href="{% url 'accounts:perfil' %}" title="Ver perfil">
+                            <i class="fas fa-user"></i>
+                        </a>
                     {% endif %}
-                    <input class="form-control me-2" type="buscar" placeholder="buscar" aria-label="buscar">
-                    <button class="btn btn-outline-success" type="submit">Buscar</button>
+                    <label class="visually-hidden" for="buscar">Buscar</label>
+                    <input class="form-control me-2" type="search" id="buscar" placeholder="Buscar" aria-label="Buscar">
+                    <button class="btn btn-outline-success me-2" type="submit" title="Buscar">
+                        <i class="fas fa-search"></i>
+                    </button>
                     {% if user.is_authenticated %}
-                        <a class="btn btn-outline-danger" href="{% url 'accounts:logout_user' %}">Logout</a>
+                        <a class="btn btn-outline-danger me-2" href="{% url 'accounts:logout_user' %}" title="Fazer logout">Logout</a>
                     {% else %}
-                        <a class="btn btn-outline-primary" href="{% url 'accounts:login_user' %}">Login</a>
+                        <a class="btn btn-outline-primary me-2" href="{% url 'accounts:login_user' %}" title="Fazer login">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </a>
                     {% endif %}
                 </form>
             </div>
         </div>
-    </nav>
+    </nav>    
     <div>
         {% block content %}
 

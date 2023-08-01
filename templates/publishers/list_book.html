@@ -1,31 +1,42 @@
 {% extends 'base.html' %}
 {% load group_tags %}
 {% block content %}
-<main>
+<main class="container">
     {% if user.is_authenticated and user|is_group %}
-            <h1>Listar Livros Da Editora: {% for grou in group.all %} {{grou}} {% endfor %}</h1> 
-            <ul>
-            <a href="{% url 'publishers:create_book' %}">Criar</a>
-            <br>
+        <h1 class="mb-4">Listar Livros da Editora:</h1>
+        <div class="row">
+            <div class="col-12">
+                <a href="{% url 'publishers:create_book' %}" class="btn btn-primary mb-3">Criar</a>
+            </div>
             {% if messages %}
-                {% for message in messages %}
-                    <div id="alert-div" class="alert alert-{{ message.tags }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
+                <div class="col-12">
+                    {% for message in messages %}
+                        <div id="alert-div" class="alert alert-{{ message.tags }}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
             {% endif %}
             {% for books_p in books_list_publishers %}
                 {% if user|is_in_group:books_p.group %}
-                    <img src="{{ books_p.cape.url }}" alt="{{ books_p.title }}">
-                    <li>{{ books_p.title }}</li>
-                    {% for author in books_p.author.all %}
-                        <li>{{ author }}</li>
-                    {% endfor %}
-                    <a href="{% url 'publishers:detail_book_publishers' pk=books_p.pk %}">Detalhar</a>
-                    <hr>
+                    <div class="col-md-4 mb-3">
+                        <div class="card">
+                            <img src="{{ books_p.cape.url }}" alt="{{ books_p.title }}" class="card-img-top">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ books_p.title }}</h5>
+                                <p class="card-text">Autores:</p>
+                                <ul>
+                                    {% for author in books_p.author.all %}
+                                        <li>{{ author }}</li>
+                                    {% endfor %}
+                                </ul>
+                                <a href="{% url 'publishers:detail_book_publishers' pk=books_p.pk %}" class="btn btn-primary">Detalhar</a>
+                            </div>
+                        </div>
+                    </div>
                 {% endif %}
             {% endfor %}
+        </div>
     {% endif %}
-    </ul>   
 </main>
 {% endblock %}
