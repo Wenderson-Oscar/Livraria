@@ -6,6 +6,17 @@ from bookstore.apps.books.models import Book, Like, Favority
 from django.contrib.auth.mixins import LoginRequiredMixin
 from bookstore.apps.chat.models import Chat
 from django.core.paginator import Paginator, EmptyPage
+from django.http import JsonResponse
+
+
+class SearchBook(View):
+
+    def get(self, request):
+        query = request.GET.get('search')
+        if query:
+            books = Book.objects.filter(title__icontains=query).values('pk', 'title')
+            return JsonResponse(list(books), safe=False)
+        return JsonResponse([], safe=False)
 
 
 class DeleteFavorityBook(LoginRequiredMixin, View):
