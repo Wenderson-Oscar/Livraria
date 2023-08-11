@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main>
+    <div class="container">
+        <div class="card mt-4">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4">
+                        {% if perfil.perfil %}
+                            <img class="card-img" src="{{perfil.perfil.url}}" alt="Foto de Perfil" height="300px" width="350px">
+                        {% else %}
+                            <p class="text-muted">Foto de Perfil Não Adicionada</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <b>Nome:</b> 
+                                    {% if perfil.name %}
+                                        {{perfil.name}}
+                                    {% else %}
+                                        <span class="text-muted">Não Informado</span>
+                                    {% endif %}
+                                </div>
+                                <div class="mb-3">
+                                    <b>Participando da Scan:</b> 
+                                    {% for perf in perfil.groups.all %} 
+                                        {% if perf %} 
+                                            {{perf}} 
+                                        {% else %} 
+                                            <span class="text-muted">Não Participa de Nenhum</span> 
+                                        {% endif %} 
+                                    {% endfor %}
+                                </div>
+                                <div class="mb-3">
+                                    <b>E-mail:</b> {{perfil.email}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <a href="{% url 'accounts:update_user' %}" class="btn btn-primary">Editar Perfil</a>
+                            <a href="{% url 'accounts:delete_user' %}" class="btn btn-primary">Excluir Conta</a>
+                            <a href="{% url 'accounts:password_reset' %}" class="btn btn-primary">Mudar Senha</a>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="text-center">
+                    <h3>Livros Favoritos</h3>
+                </div>
+                <div class="row mt-4">
+                    {% for favority in list_favoritys %}
+                        <div class="col-md-4">
+                            <div class="card mb-4">
+                                <a href="{% url 'books:detail_book' pk=favority.book.pk %}">
+                                    <img src="{{favority.book.cape.url}}" class="card-img-top" alt="Capa do Livro" height="300px" width="350px">
+                                </a>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ favority.book }}</h5>
+                                    <a href="{% url 'books:delete_favority' pk2=favority.pk %}" class="btn btn-danger btn-sm">Remover dos Favoritos</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% load group_tags %}
+{% block content %}
+<main class="container py-4">
+    <h1>Grupo {{ detail_g.name }}</h1>
+    <a href="{% url 'groups:list_groups' %}" class="btn btn-secondary mb-3">Voltar</a>
+    <hr>
+    {% if messages %}
+        {% for message in messages %}
+            <div id="alert-div" class="alert alert-{{ message.tags }} mb-3">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <h3>Informações do Grupo</h3>
+                    <div id="group-info">
+                        <p><strong>Nome:</strong> {{ detail_g.name }}</p>
+                        {% if user.is_authenticated and user|is_group and user.is_superuser or user.is_staff %}
+                            <button id="edit-button" onclick="showForm()" class="btn btn-primary btn-sm">Editar Nome</button>
+                        {% endif %}
+                    </div>
+                    <form id="edit-form" method="post" action="{% url 'permissions:update_name_group' pk=object.pk %}" style="display: none;" onsubmit="return confirmUpdateNameGroup()">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="name">Nome</label>
+                            <input type="text" name="name" id="name" value="{{ detail_g.name }}" class="form-control">
+                        </div>
+                        <button type="submit" class="btn btn-success btn-sm">Alterar</button>
+                        <a href="{% url 'groups:detail_group' pk=object.pk %}" class="btn btn-secondary btn-sm">Cancelar</a>
+                    </form>
+                </div>
+                {% if user.is_authenticated and user|is_group and user.is_superuser or user.is_staff %}
+                    <div class="col-md-6">
+                        <div class="card mb-3" style="background-color: #f0f0f0;">
+                            <div class="card-body">
+                                {% for user in detail_g.user_set.all %}
+                                    {% if user.is_superuser %}
+                                        <div class="d-flex align-items-start mb-2">
+                                            <div class="rounded-circle bg-secondary p-2 mr-2">
+                                                <img src="{{ user.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
+                                            </div>
+                                            <p class="card-text"> {% if user.name %} {{user.name}}<br> {% else %} Nome não informado<br> {% endif %}</p>
+                                        </div>
+                                        <p class="card-text">{{user.email}}</p>
+                                        {% if user.is_authenticated and user|is_group and user.is_superuser or user.is_staff %}
+                                            <form action="{% url 'permissions:remove_admin_group' pk=object.pk %}" method="post" onsubmit="return confirmDeleteAdminGroup()">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="user" value="{{ user.pk }}">
+                                                <button type="submit" class="btn btn-danger btn-sm">Remover Admin</button>
+                                            </form>
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                <div class="col-md-6">
+                    <div class="card mb-3" style="background-color: #f0f0f0;">
+                        <div class="card-body">
+                            {% for user in detail_g.user_set.all %}
+                                {% if user.is_superuser %}
+                                    <div class="d-flex align-items-start mb-2">
+                                        <div class="rounded-circle bg-secondary p-2 mr-2">
+                                            <img src="{{ user.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
+                                        </div>
+                                        <p class="card-text"> {% if user.name %} {{user.name}}<br> {% else %} Nome não informado<br> {% endif %}</p>
+                                    </div>
+                                    <p class="card-text">{{user.email}}</p>
+                                {% endif %} 
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3>Permissões Concedidas</h3>
+                    {% for permission in detail_g.permissions.all %}
+                        <p class="card-text">{{ permission }}</p>
+                    {% endfor %}
+                    {% if user.is_staff and user.is_authenticated and user.is_superuser %}
+                        <a href="{% url 'groups:update_group' pk=object.pk %}" class="btn btn-info btn-sm">Editar</a>
+                        <form action="{% url 'groups:delete_group' pk=object.pk %}" method="post" onsubmit="return confirmDeleteGroup()">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h3>Usuários no Grupo</h3>
+                    {% if user.is_authenticated and user|is_group and user.is_superuser or user.is_staff %}
+                        {% for user in detail_g.user_set.all %}
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="card mb-3" style="background-color: #f0f0f0;">
+                                        <div class="card-body">
+                                            <div class="d-flex align-items-start mb-2">
+                                                <div class="rounded-circle bg-secondary p-2 mr-2">
+                                                    <img src="{{ user.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
+                                                </div>
+                                                <p class="card-text"> {% if user.name %} {{user.name}}<br> {% else %} Nome não informado<br> {% endif %}</p>
+                                            </div>
+                                            <p class="card-text">{{user.email}}</p>
+                                        </div>
+                                    </div>
+                                    <form action="{% url 'permissions:remove_user_group' pk=user.pk %}" method="post" onsubmit="return confirmDeleteUserGroup()">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="user" value="{{ user.pk }}">
+                                        <button type="submit" class="btn btn-danger btn-sm">Excluir</button>
+                                    </form>
+                                </div>
+                            </div>
+                        {% endfor %}
+                        <a href="{% url 'permissions:add_user_group' pk=object.pk %}" class="btn btn-primary btn-sm">Adicionar Usuário</a>
+                    {% else %}
+                        {% for user in detail_g.user_set.all %}
+                            <div class="card mb-3" style="background-color: #f0f0f0;">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-start mb-2">
+                                        <div class="rounded-circle bg-secondary p-2 mr-2">
+                                            <img src="{{ user.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
+                                        </div>
+                                        <p class="card-text"> {% if user.name %} {{user.name}}<br> {% else %} Nome não informado<br> {% endif %}</p>
+                                    </div>
+                                    <p class="card-text">{{user.email}}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

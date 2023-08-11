@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block content %}
+<main class="container">
+    {% if messages %}
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} message-fadeout">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    {% if user.is_staff %}
+                        <h1 class="mb-4">Adicionar Administrador ao Grupo</h1>
+                    {% else %}
+                        <h1 class="mb-4">Adicionar Usuário ao Grupo | {{ object.name }}</h1>
+                    {% endif %}
+                    <form action="{% if user.is_staff %}{% url 'permissions:add_admin_group' pk=object.pk %}{% else %}{% url 'permissions:add_user_group' pk=object.pk %}{% endif %}" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="user">Usuário</label>
+                            <select name="user" id="user" class="form-control">
+                                {% for user in users %}
+                                    <option value="{{ user.pk }}">{{ user }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="submit" class="btn btn-primary">Adicionar</button>
+                            <a href="{% url 'groups:detail_group' pk=object.pk %}" class="btn btn-secondary">Voltar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+<main class="container">
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <img src="{{ detail_b.cape.url }}" alt="{{ detail_b.title }}" class="card-img-top">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ detail_b.title }}</h5>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div id="alert-div" class="alert alert-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <ul class="list-unstyled">
+                        <li class="font-italic">{{ detail_b.sinopse }}</li>
+                        <hr>
+                        <li><strong>Ano de Publicação:</strong> {{ detail_b.year_publication }}</li>
+                        <li>
+                            <i class="fas fa-thumbs-up"></i> Likes: {{ detail_b.quant_like }}
+                        </li>
+                        <li>
+                            <i class="fas fa-download"></i> Downloads: {{ detail_b.quant_downloads }}
+                        </li>
+                        <li><strong>Autores:</strong>
+                            <ul class="list-unstyled">
+                                {% for author_b in detail_b.author.all %}
+                                    <li>{{ author_b }}</li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li><strong>Gêneros:</strong>
+                            <ul class="list-unstyled">
+                                {% for gender_b in detail_b.gender.all %}
+                                    <li>{{ gender_b }}</li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li><strong>Grupo:</strong> {{ detail_b.group }}</li>
+                    </ul>
+                    <div class="d-flex justify-content-end">
+                        <a href="{% url 'publishers:update_book_publishers' pk=object.pk %}" class="btn btn-primary mr-2">Editar</a>
+                        <form action="{% url 'publishers:delete_book_publishers' pk=object.pk %}" method="post" onsubmit="return confirmDeleteBook()">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger">Excluir</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+
+{% endblock %}

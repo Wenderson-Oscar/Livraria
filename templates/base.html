@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+{% load static %}
+{% load group_tags %}
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Icons -->
+    <link rel="shortcut icon" href="{% static 'icons/book.png' %}" type="image/x-icon">
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/animation_button.css' %}">
+    <!-- JS -->
+    <script src="{% static 'js/read_book.js' %}"></script>
+    <script src="{% static 'js/layout_edit.js' %}"></script>
+    <script src="{% static 'js/icons_animat.js' %}"></script>
+    <script src="{% static 'js/confirm_task.js' %}"></script>
+    <script src="{% static 'js/time_message.js' %}" ></script>
+    <!-- Links Externos -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.min.js"></script>
+    <link rel="canonical" href="https://getbootstrap.com/docs/5.3/examples/navbars/">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf.worker.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.9.359/pdf_viewer.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <title>Livraria Web</title>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01"
+                aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+                <a class="navbar-brand" href="{% url 'books:list_books' %}">
+                    <img src="{% static 'icons/book.png' %}" height="20px" width="50px" alt="Livraria Web">
+                </a>
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="{% url 'books:list_books' %}" title="Ver todos os livros">Livros</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'books:list_books_order' %}" title="Ver lançamentos">Lançamentos</a>
+                    </li>
+                    {% if not user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'accounts:create_user' %}" title="Registrar-se">Registrar</a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <form class="d-flex" role="buscar">
+                    {% if user.is_authenticated and user.is_superuser and user.is_staff or user.is_authenticated and user|is_group %}
+                        <a class="btn btn-outline-primary me-2" href="{% url 'groups:list_groups' %}" title="Ver grupos">Grupos</a>
+                        <a class="btn btn-outline-primary me-2" href="{% url 'publishers:list_book_publishers' %}" title="Ver grupo">Grupo</a>
+                    {% elif user.is_authenticated %}
+                        <a class="btn btn-outline-primary me-2" href="{% url 'groups:list_groups' %}" title="Ver grupos">Grupos</a>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                        <a class="btn btn-outline-primary me-2" href="{% url 'accounts:perfil' %}" title="Ver perfil">
+                            <i class="fas fa-user"></i>
+                        </a>
+                    {% endif %}
+                    <form method="GET" action="{% url 'books:book_search' %}" class="position-relative">
+                        <label class="visually-hidden" for="buscar">Buscar por título</label>
+                        <input class="form-control me-2" type="search" id="buscar" name="search" placeholder="Buscar por título" aria-label="Buscar">
+                        <button class="btn btn-outline-success me-2" type="submit" title="Buscar">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <div class="dropdown-menu position-absolute w-100" id="search-results" style="display: none;">
+                            <!-- Os resultados da pesquisa serão exibidos aqui -->
+                        </div>
+                    </form>
+                    
+                    <script>
+                        $(document).ready(function () {
+                            $("#buscar").on('input', function () {
+                                var query = $(this).val();
+                                if (query.length >= 3) {
+                                    $.ajax({
+                                        url: '{% url "books:book_search" %}',
+                                        data: { 'search': query },
+                                        success: function (data) {
+                                            var results = data.map(function (book) {
+                                                var url = '/detail_book/' + book.pk + '/';
+                                                return '<a class="dropdown-item" href="' + url + '">'
+                                                    + book.title +
+                                                    '</a>';
+                                            }).join('');
+                                            $("#search-results").html(results);
+                                            $("#search-results").show();
+                                        },
+                                        error: function () {
+                                            $("#search-results").hide();
+                                        }
+                                    });
+                                } else {
+                                    $("#search-results").hide();
+                                }
+                            });
+                    
+                            $(document).click(function (e) {
+                                if (!$(e.target).closest("#search-results").length) {
+                                    $("#search-results").hide();
+                                }
+                            });
+                        });
+                    </script>
+                                                      
+                    {% if user.is_authenticated %}
+                        <a class="btn btn-outline-danger me-2" href="{% url 'accounts:logout_user' %}" title="Fazer logout">Logout</a>
+                    {% else %}
+                        <a class="btn btn-outline-primary me-2" href="{% url 'accounts:login_user' %}" title="Fazer login">
+                            <i class="fas fa-sign-in-alt"></i>
+                        </a>
+                    {% endif %}
+                </form>
+            </div>
+        </div>
+    </nav>    
+    <div>
+        {% block content %}
+
+        {% endblock %}
+    </div>
+</body>
+
+</html>
