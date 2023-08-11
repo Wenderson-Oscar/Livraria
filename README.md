@@ -72,7 +72,7 @@ Clone o projeto
 Entre no diretório do projeto
 
 ```bash
-  cd livraria
+  cd Livraria
 ```
 
 Crie um ambiente virtual
@@ -97,6 +97,25 @@ Instale as dependências
 
 ```bash
   pip install -r requirements.txt
+```
+
+### Configure o arquivo .env
+
+Crie o arquivo `.env`
+
+```bash
+touch .env
+```
+
+Adicione as seguintes variáveis de ambiente ao arquivo `.env`
+
+gerador de chave secreta `SECRET_KEY`: [Djecrety](https://djecrety.ir/).
+
+```bash
+SECRET_KEY="sua_chave_secreta"
+DEBUG=False
+EMAIL_HOST_USER = 'seu_email'
+EMAIL_HOST_PASSWORD = 'sua_chave_de_email'
 ```
 
 Crie o banco de dados
