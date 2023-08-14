@@ -99,7 +99,7 @@ Instale as dependências
 
 ### Configure o arquivo .env
 
-Crie o arquivo `.env`
+Crie o arquivo `.env` na raiz do projeto
 
 ```bash
 touch .env
