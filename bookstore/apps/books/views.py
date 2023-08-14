@@ -9,7 +9,7 @@ from django.core.paginator import Paginator, EmptyPage
 from django.http import JsonResponse
 
 
-class SearchBook(View):
+class SearchBookPop(View):
 
     def get(self, request):
         query = request.GET.get('search')

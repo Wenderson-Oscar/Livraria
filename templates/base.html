@@ -77,7 +77,6 @@
                             <!-- Os resultados da pesquisa serão exibidos aqui -->
                         </div>
                     </form>
-                    
                     <script>
                         $(document).ready(function () {
                             $("#buscar").on('input', function () {
@@ -90,7 +89,7 @@
                                             var results = data.map(function (book) {
                                                 var url = '/detail_book/' + book.pk + '/';
                                                 return '<a class="dropdown-item" href="' + url + '">'
-                                                    + book.title +
+                                                    + book.title + 
                                                     '</a>';
                                             }).join('');
                                             $("#search-results").html(results);
@@ -111,8 +110,7 @@
                                 }
                             });
                         });
-                    </script>
-                                                      
+                    </script>                         
                     {% if user.is_authenticated %}
                         <a class="btn btn-outline-danger me-2" href="{% url 'accounts:logout_user' %}" title="Fazer logout">Logout</a>
                     {% else %}

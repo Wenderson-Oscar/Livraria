@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import Group
+from django.core.exceptions import ValidationError
+from django.utils import timezone
 
 
 class Author(models.Model):
@@ -20,10 +22,14 @@ class Gender(models.Model):
 
 class Book(models.Model):
 
+    def validate_date(value):
+        if value > timezone.now().date():
+            raise ValidationError('Data não pode ser maior que a atual')
+
     title = models.CharField(verbose_name='Nome do Livro', max_length=100, unique=True)
     cape = models.ImageField(verbose_name='Capa do Livro', unique=True, upload_to='book/')
     sinopse = models.TextField(verbose_name='Sinopse do Livro')
-    year_publication = models.DateField(verbose_name='Ano de Publicação')
+    year_publication = models.DateField(verbose_name='Ano de Publicação', validators=[validate_date])
     book = models.FileField(verbose_name='Livro', unique=True, upload_to='book/')
     quant_like = models.IntegerField(verbose_name='Curtidas', blank=True, default=0)
     quant_downloads = models.IntegerField(verbose_name='Quantidade de Downloads', blank=True, default=0)
