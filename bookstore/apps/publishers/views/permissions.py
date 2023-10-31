@@ -60,11 +60,16 @@ class AddAdminGroup(LoginRequiredMixin, UpdateView):
 
     model = Group
     fields = []
-    template_name = 'publishers/group/add_user_group.html'
+    template_name = 'publishers/permissions/add_user_group.html'
 
     def get_success_url(self):
         return reverse_lazy('groups:detail_group', kwargs={'pk': self.object.pk})
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['users'] = User.objects.all().filter(is_staff=False)
+        return context
+        
     def form_valid(self, form):
         response = super().form_valid(form)
         group = self.get_object()
@@ -89,7 +94,7 @@ class AddUserGroup(LoginRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['users'] = User.objects.all()
+        context['users'] = User.objects.all().filter(is_staff=False)
         return context
 
     def form_valid(self, form):
@@ -111,13 +116,17 @@ class RemoveUserGroup(LoginRequiredMixin, UpdateView):
 
     def get_success_url(self):
         return reverse_lazy('groups:detail_group', kwargs={'pk': self.object.pk})
-
-    def form_valid(self, form):
+    
+    def form_valid(self, form, **kwargs):
         response = super().form_valid(form)
-        group = self.get_object()
+        group = self.object.id
+        print(group)
+        name_group = get_object_or_404(Group, pk=group)
+        print(name_group)
         user_pk = self.request.POST.get('user')
         user = get_object_or_404(User, pk=user_pk)
-        group.user_set.remove(user)
+        print(user, user_pk)
+        name_group.user_set.remove(user)
         messages.success(self.request, 'Usuário Removido do Grupo com Sucesso!')
         return response
         
