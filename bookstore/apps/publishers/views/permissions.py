@@ -60,7 +60,7 @@ class AddAdminGroup(LoginRequiredMixin, UpdateView):
 
     model = Group
     fields = []
-    template_name = 'publishers/permissions/add_user_group.html'
+    template_name = 'publishers/permissions/add_adm_group.html'
 
     def get_success_url(self):
         return reverse_lazy('groups:detail_group', kwargs={'pk': self.object.pk})
@@ -120,12 +120,11 @@ class RemoveUserGroup(LoginRequiredMixin, UpdateView):
     def form_valid(self, form, **kwargs):
         response = super().form_valid(form)
         group = self.object.id
-        print(group)
         name_group = get_object_or_404(Group, pk=group)
-        print(name_group)
         user_pk = self.request.POST.get('user')
         user = get_object_or_404(User, pk=user_pk)
-        print(user, user_pk)
+        user.is_superuser = False
+        user.save()
         name_group.user_set.remove(user)
         messages.success(self.request, 'Usuário Removido do Grupo com Sucesso!')
         return response

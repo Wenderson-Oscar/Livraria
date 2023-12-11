@@ -16,9 +16,8 @@
         <div class="col-md-6">
             <div class="card">
                 <div class="card-body">
-                    </form>
-                    <h1 class="mb-4">Adicionar Usuário ao Grupo | {{ object.name }}</h1>
-                    <form action="{% url 'permissions:add_user_group' pk=object.pk %}" method="post">
+                    <h1 class="mb-4">Adicionar Administrador ao Grupo</h1>
+                    <form action="{% url 'permissions:add_admin_group' pk=object.pk %}" method="post">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="user">Usuário</label>
@@ -32,7 +31,7 @@
                             <button type="submit" class="btn btn-primary">Adicionar</button>
                             <a href="{% url 'groups:detail_group' pk=object.pk %}" class="btn btn-secondary">Voltar</a>
                         </div>
-                    </form>             
+                    </form>
                 </div>
             </div>
         </div>

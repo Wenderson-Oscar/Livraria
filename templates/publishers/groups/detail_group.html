@@ -62,7 +62,7 @@
                                     {% endif %}
                                 {% endfor %}
                             </div>
-                            <a href="{% url 'permissions:add_admin_group' pk=user.pk %}" class="btn btn-primary btn-sm">Adicionar ADM</a>
+                            <a href="{% url 'permissions:add_admin_group' pk=object.pk %}" class="btn btn-primary btn-sm">Adicionar ADM</a>
                         </div>
                     </div>
                 {% else %}
