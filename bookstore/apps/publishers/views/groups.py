@@ -11,7 +11,7 @@ from django.utils.decorators import method_decorator
 class CreateGroup(LoginRequiredMixin, CreateView):
 
     model = Group
-    fields = '__all__'
+    fields = ('name',)
     template_name = 'publishers/groups/create_group.html'
     success_url = reverse_lazy('groups:list_groups')
 
@@ -39,7 +39,7 @@ class DetailGroup(LoginRequiredMixin, DetailView):
 class UpdateGroup(LoginRequiredMixin, UpdateView):
 
     model = Group
-    fields = '__all__'
+    fields = ('name',)
     template_name = 'publishers/groups/update_group.html'
     
     def get_success_url(self):

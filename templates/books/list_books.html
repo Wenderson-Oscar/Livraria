@@ -1,7 +1,7 @@
 {% extends 'base.html' %}  
 {% load static %}
 {% block content %}
-<main>
+<main style="background-color: #f8f9fa;">
     <hr>
     <center>
         <h2>Lista de Livros</h2>
@@ -11,33 +11,34 @@
         <div class="row">
             {% for book in books.all %}
             <div class="col-md-3">
-                <table class="table-responsive">
+                <div class="card mb-4">
                     <a href="{% url 'books:detail_book' pk=book.id %}">
-                    <img src="{{book.cape.url}}" height="190px" width="140px" alt="Capa da Imagem"><br>
-                    <b>Nome:</b> {{book.title}}<br>
-                    {% for autor in book.author.all %}
-                    <b>Autor:</b> {{autor.name}}
-                    {% endfor %}
+                        <img src="{{book.cape.url}}" class="card-img-top" alt="Capa da Imagem">
                     </a>
-                    <br>
-                    <a href="{% url 'books:detail_book' pk=book.id %}">
-                        <button class="btn btn-primary disabled" type="submit">Abrir</button>
-                    </a>
-                </table>
+                    <div class="card-body">
+                        <h5 class="card-title">{{book.title}}</h5>
+                        <p class="card-text">Autores:
+                            {% for autor in book.author.all %}
+                                {{autor.name}}
+                                {% if not forloop.last %}, {% endif %}
+                            {% endfor %}
+                        </p>
+                        <a href="{% url 'books:detail_book' pk=book.id %}" class="btn btn-primary">Abrir</a>
+                    </div>
+                </div>
             </div>
             {% endfor %}
-            <div class="pagination">
-                {% if page_obj.has_previous %}
-                    <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Anterior</a>
-                {% endif %}
-                <span class="current-page">{{ page_obj.number }}</span>
-                <span class="total-pages">de {{ page_obj.paginator.num_pages }}</span>
-                {% if page_obj.has_next %}
-                    <a href="?page={{ page_obj.next_page_number }}" class="page-link">Próxima</a>
-                {% endif %}
-            </div>            
         </div>
     </div>
-    
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Anterior</a>
+        {% endif %}
+        <span class="current-page">{{ page_obj.number }}</span>
+        <span class="total-pages">de {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}" class="page-link">Próxima</a>
+        {% endif %}
+    </div>
 </main>
 {% endblock %}

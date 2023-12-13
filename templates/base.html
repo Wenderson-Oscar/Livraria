@@ -49,11 +49,6 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'books:list_books_order' %}" title="Ver lançamentos">Lançamentos</a>
                     </li>
-                    {% if not user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'accounts:create_user' %}" title="Registrar-se">Registrar</a>
-                        </li>
-                    {% endif %}
                 </ul>
                 <form class="d-flex" role="buscar">
                     {% if user.is_authenticated and user.is_superuser and user.is_staff or user.is_authenticated and user|is_group %}

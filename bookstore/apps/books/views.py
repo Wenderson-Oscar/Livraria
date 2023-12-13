@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from bookstore.apps.chat.models import Chat
 from django.core.paginator import Paginator, EmptyPage
 from django.http import JsonResponse
+from django.db.models import Q
 
 
 class SearchBookPop(View):
@@ -14,7 +15,11 @@ class SearchBookPop(View):
     def get(self, request):
         query = request.GET.get('search')
         if query:
-            books = Book.objects.filter(title__icontains=query).values('pk', 'title')
+            books = Book.objects.filter(
+                Q(title__icontains=query) |
+                Q(author__name__icontains=query) |
+                Q(gender__gender__icontains=query)
+            ).values('pk', 'title')
             return JsonResponse(list(books), safe=False)
         return JsonResponse([], safe=False)
 

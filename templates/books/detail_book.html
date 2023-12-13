@@ -94,7 +94,8 @@
                                             <div class="d-flex justify-content-between align-items-center">
                                                 <h5 class="card-title">{{ comment.author }}</h5>
                                                 {% if user == comment.author %}
-                                                    <a href="{% url 'chats:delete_comment' pk=book.pk pk1=comment.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+                                                    <a href="{% url 'chats:delete_comment' pk=book.pk pk1=comment.pk %}" class="btn btn-danger btn-sm"
+                                                    onsubmit="return confirmDeleteComment()">Excluir</a>
                                                 {% endif %}
                                             </div>
                                             <p id="comment_text_{{ comment.pk }}" class="form-control">{{ comment.comment }}</p>
@@ -143,7 +144,8 @@
                                                     <div class="d-flex justify-content-between align-items-center">
                                                         <h5 class="card-title">{{ reply.author }}</h5>
                                                         {% if user == reply.author %}
-                                                            <a href="{% url 'chats:delete_comment' pk=book.pk pk1=reply.pk %}" class="btn btn-danger btn-sm">Excluir</a>
+                                                            <a href="{% url 'chats:delete_comment' pk=book.pk pk1=reply.pk %}" class="btn btn-danger btn-sm"
+                                                            onsubmit="return confirmDeleteComment()">Excluir</a>
                                                         {% endif %}
                                                     </div>
                                                     <p id="comment_text_{{ reply.pk }}" class="form-control">{{ reply.comment }}</p>
