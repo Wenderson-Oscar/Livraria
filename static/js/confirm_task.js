@@ -13,3 +13,6 @@ function confirmUpdateNameGroup() {
 function confirmDeleteAdminGroup() {
     return confirm("Tem certeza que deseja remover este administrador do grupo?");
 }
+function confirmDeleteComment() {
+    return confirm("Tem certeza que deseja excluir este comentário?");
+}
