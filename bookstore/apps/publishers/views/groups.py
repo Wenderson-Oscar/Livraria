@@ -5,6 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.contrib.auth.decorators import permission_required
 from django.utils.decorators import method_decorator
+from bookstore.apps.chat.models import ChatPublishers
 
 
 @method_decorator(permission_required('is_staff'), name='dispatch')
@@ -33,6 +34,11 @@ class DetailGroup(LoginRequiredMixin, DetailView):
     model = Group
     template_name = 'publishers/groups/detail_group.html'
     context_object_name = 'detail_g'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['group_comments'] = ChatPublishers.objects.order_by('-year_publication')
+        return context
 
 
 @method_decorator(permission_required('is_staff'), name='dispatch')

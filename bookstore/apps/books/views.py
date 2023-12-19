@@ -10,6 +10,13 @@ from django.http import JsonResponse
 from django.db.models import Q
 
 
+class RandomBook(View):
+
+    def get(self, request):
+        book = Book.objects.order_by('?').first()
+        return redirect('/detail_book/' + str(book.pk))
+
+
 class SearchBookPop(View):
 
     def get(self, request):
@@ -54,7 +61,7 @@ class ListBooks(ListView):
     model = Book
     template_name = 'books/list_books.html'
     context_object_name = 'books'
-    paginate_by = 10
+    paginate_by = 12
 
 
     def get_queryset(self):
