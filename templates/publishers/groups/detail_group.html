@@ -96,17 +96,13 @@
                         {% for user in detail_g.user_set.all %}
                             <div class="card mb-3">
                                 <div class="card-body">
-                                    <div class="card mb-3" style="background-color: #f0f0f0;">
-                                        <div class="card-body">
-                                            <div class="d-flex align-items-start mb-2">
-                                                <div class="rounded-circle bg-secondary p-2 mr-2">
-                                                    <img src="{{ user.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
-                                                </div>
-                                                <p class="card-text"> {% if user.name %} {{user.name}}<br> {% else %} Nome não informado<br> {% endif %}</p>
-                                            </div>
-                                            <p class="card-text">{{user.email}}</p>
+                                    <div class="d-flex align-items-start mb-2">
+                                        <div class="rounded-circle bg-secondary p-2 mr-2">
+                                            <img src="{{ user.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
                                         </div>
+                                        <p class="card-text"> {% if user.name %} {{user.name}}<br> {% else %} Nome não informado<br> {% endif %}</p>
                                     </div>
+                                    <p class="card-text">{{user.email}}</p>
                                     <form action="{% url 'permissions:remove_user_group' pk=object.pk pk1=user.pk %}" method="post" onsubmit="return confirmDeleteUserGroup()">
                                         {% csrf_token %}
                                         <input type="hidden" name="user" value="{{ user.pk }}">
@@ -118,7 +114,7 @@
                         <a href="{% url 'permissions:add_user_group' pk=object.pk %}" class="btn btn-primary btn-sm">Adicionar Usuário</a>
                     {% else %}
                         {% for user in detail_g.user_set.all %}
-                            <div class="card mb-3" style="background-color: #f0f0f0;">
+                            <div class="card mb-3">
                                 <div class="card-body">
                                     <div class="d-flex align-items-start mb-2">
                                         <div class="rounded-circle bg-secondary p-2 mr-2">
@@ -131,6 +127,146 @@
                             </div>
                         {% endfor %}
                     {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card mb-4">
+                <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                    <h2>Bate-Papo</h2>
+                    <form id="responseFormulario" method="post" action="{% url 'chats_publishers:create_comment_publishers' pk=object.pk %}">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <input type="text" name="comment" id="comment" class="form-control" placeholder="Junte-se ao Debate...">
+                            {% if user.is_authenticated %}
+                                <button class="btn btn-success" type="submit">Enviar</button>
+                            {% else %}
+                                <a class="btn btn-success" href="{% url 'accounts:create_user' %}">
+                                    Enviar
+                                </a>
+                            {% endif %}
+                            <a href="{% url 'groups:detail_group' pk=object.pk %}" class="btn btn-secondary" role="button">Cancelar</a>
+                        </div>
+                    </form>
+                    {% for comment in group_comments %}
+                        {% if not comment.parent_comment %}
+                        <div class="card mb-3" style="background-color: #f0f0f0;">
+                            <div class="card-body">
+                                <div class="d-flex align-items-start mb-2">
+                                    <div class="rounded-circle bg-secondary p-2 mr-2">
+                                        {% if comment.author.perfil %}
+                                            <img src="{{ comment.author.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
+                                        {% endif %}
+                                    </div>
+                                    <div class="flex-grow-1">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h5 class="card-title">{{ comment.author }}</h5>
+                                            {% if user == comment.author %}
+                                                <a href="{% url 'chats_publishers:delete_comment_publishers' pk=object.pk pk1=comment.pk %}" class="btn btn-danger btn-sm"
+                                                onsubmit="return confirmDeleteComment()">Excluir</a>
+                                            {% endif %}
+                                        </div>
+                                        <p id="comment_text_{{ comment.pk }}" class="form-control">{{ comment.comment }}</p>
+                                        {% if user == comment.author %}
+                                            <div id="comment_{{ comment.pk }}">
+                                                <div id="edit_comment_{{ comment.pk }}" {% if not edit %}style="display: none;"{% endif %}>
+                                                    <form id="editFormulario_{{ comment.pk }}" method="post" action="{% url 'chats_publishers:update_comment_publishers' pk=object.pk pk1=comment.pk %}">
+                                                        {% csrf_token %}
+                                                        <div class="input-group mb-3">
+                                                            {% if not edit %}
+                                                                <input type="text" name="edit_msg" id="edit_msg_input_{{ comment.pk }}" class="form-control" placeholder="{{ comment.comment }}">
+                                                            {% endif %}
+                                                            <button class="btn btn-success" type="submit">Salvar</button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <button class="btn btn-primary" id="edit_msg_{{ comment.pk }}" onclick="toggleEditForm('{{ comment.pk }}')">Editar</button>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <div>
+                                        <p class="card-text">Publicado em {{ comment.year_publication }}</p>
+                                        <p class="card-text">Curtidas: {{ comment.quant_like }}</p>
+                                        {% if user.is_authenticated %}
+                                            <a href="{% url 'chats_publishers:add_like_publishers' pk1=comment.pk pk=object.pk %}">
+                                                <span id="likeBtn" class="far fa-thumbs-up like-icon" style="font-size: 24px;"></span>
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if comment.replies.all %}
+                            <div class="card mb-3" style="background-color: #f0f0f0;">
+                                <div class="card-body">
+                                    {% for reply in comment.replies.all %}
+                                        <div class="d-flex align-items-start mb-2 ml-5">
+                                            <div class="rounded-circle bg-secondary p-2 mr-2">
+                                                {% if reply.author.perfil %}
+                                                    <img src="{{ reply.author.perfil.url }}" alt="foto de perfil" width="50" height="50" class="rounded-circle">
+                                                {% endif %}
+                                            </div>
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <h5 class="card-title">{{ reply.author }}</h5>
+                                                    {% if user == reply.author %}
+                                                        <a href="{% url 'chats_publishers:delete_comment_publishers' pk=object.pk pk1=comment.pk %}" class="btn btn-danger btn-sm"
+                                                        onsubmit="return confirmDeleteComment()">Excluir</a>
+                                                    {% endif %}
+                                                </div>
+                                                <p id="comment_text_{{ reply.pk }}" class="form-control">{{ reply.comment }}</p>
+                                                {% if user == reply.author %}
+                                                    <div id="comment_{{ reply.pk }}">
+                                                        <div id="edit_comment_{{ reply.pk }}" {% if not edit %}style="display: none;"{% endif %}>
+                                                            <form id="editFormulario_{{ reply.pk }}" method="post" action="{% url 'chats_publishers:update_comment_publishers' pk=object.pk pk1=reply.pk %}">
+                                                                {% csrf_token %}
+                                                                <div class="input-group mb-3">
+                                                                    {% if not edit %}
+                                                                        <input type="text" name="edit_msg" id="edit_msg_input_{{ reply.pk }}" class="form-control" placeholder="{{ reply.comment }}">
+                                                                    {% endif %}
+                                                                    <button class="btn btn-success" type="submit">Salvar</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+                                                        <button class="btn btn-primary" id="edit_msg_{{ reply.pk }}" onclick="toggleEditForm('{{ reply.pk }}')">Editar</button>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <p class="card-text">Publicado em {{ reply.year_publication }}</p>
+                                                <p class="card-text">Curtidas: {{ reply.quant_like }}</p>
+                                                {% if user.is_authenticated %}
+                                                    <a href="{% url 'chats_publishers:add_like_publishers' pk1=comment.pk pk=object.pk %}">
+                                                        <span id="likeBtn" class="far fa-thumbs-up like-icon" style="font-size: 24px;"></span>
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                            <form id="responseFormulario" method="post" action="{% url 'chats_publishers:response_comment_publishers' pk1=comment.pk pk=object.pk %}">
+                                {% csrf_token %}
+                                <div class="input-group mb-3 ml-5">
+                                    <input type="text" name="response_msg" id="response_msg" class="form-control" placeholder="Digite seu Comentário">
+                                    {% if user.is_authenticated %}
+                                        <button class="btn btn-success" type="submit">Enviar</button>
+                                    {% else %}
+                                        <a class="btn btn-success" href="{% url 'accounts:create_user' %}">
+                                            Enviar
+                                        </a>
+                                    {% endif %}
+                                    <a href="{% url 'groups:detail_group' pk=object.pk %}" class="btn btn-secondary" role="button">Cancelar</a>
+                                </div>
+                            </form>
+                        {% endif %}
+                    {% endfor %}
                 </div>
             </div>
         </div>

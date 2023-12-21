@@ -7,6 +7,17 @@
 Também tem grupo de usuário responsavel por adicionar, editar e remover livros.</p>
 Você também pode pedi para ser parte desse grupo, basta entrar em contato com o administrador do grupo e pedir para ser adicionado.
 
+## Demonstração em Vídeo
+
+### Super ADM
+[<img src="media/book.png" width="50%">](https://drive.google.com/file/d/1scLIdSG2KB_xkTQzkguZwJ73fnYf9zfK/view?usp=sharing "Super Admin")
+
+### Editor 
+[<img src="media/book.png" width="50%">](https://drive.google.com/file/d/1fllDv-23j2_3DU2Lg2B9DsWJQSYhwu4H/view?usp=sharing "Editor")
+
+### Visitante/Leitor
+[<img src="media/book.png" width="50%">](https://drive.google.com/file/d/1Vrm8cgWOM04Hc09x0ndzg3S9vcCuRo6_/view?usp=sharing "Leitor")
+
 
 ## Funcionalidades
 

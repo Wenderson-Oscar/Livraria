@@ -30,7 +30,7 @@
             {% endfor %}
         </div>
     </div>
-    <div class="pagination">
+    <div class="pagination d-flex justify-content-center">
         {% if page_obj.has_previous %}
             <a href="?page={{ page_obj.previous_page_number }}" class="page-link">Anterior</a>
         {% endif %}
@@ -40,5 +40,6 @@
             <a href="?page={{ page_obj.next_page_number }}" class="page-link">Próxima</a>
         {% endif %}
     </div>
+    
 </main>
 {% endblock %}

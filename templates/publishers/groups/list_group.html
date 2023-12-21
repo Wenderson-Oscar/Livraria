@@ -39,11 +39,10 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ group.name }}</h5>
-                                    {% if user.is_authenticated not in user|is_in_group:group.name %}
-                                        <a href="{% url 'permissions:asked_participate_email_group' %}?group_name={{ group.name }}" class="btn btn-warning btn-sm mt-2">Pedir Para Entrar</a>
-                                    {% endif %}
                                     {% if user.is_authenticated and user|is_in_group:group.name %}
-                                        <a href="{% url 'groups:detail_group' pk=group.pk %}" class="btn btn-success btn-sm mt-2">Detalhar Grupo</a>
+                                        <a href="{% url 'groups:detail_group' pk=group.pk %}" class="btn btn-success btn-sm mt-2">Entrar</a>
+                                    {% else %}
+                                        <a href="{% url 'permissions:asked_participate_email_group' %}?group_name={{ group.name }}" class="btn btn-warning btn-sm mt-2">Pedir Para Entrar</a>
                                     {% endif %}
                                 </div>
                             </div>
