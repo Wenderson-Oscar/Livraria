@@ -12,7 +12,7 @@ Você também pode pedi para ser parte desse grupo, basta entrar em contato com 
 ### Super ADM
 [<img src="media/book.png" width="50%">](https://drive.google.com/file/d/1scLIdSG2KB_xkTQzkguZwJ73fnYf9zfK/view?usp=sharing "Super Admin")
 
-### Editor 
+### ADM do Grupo/ Editor 
 [<img src="media/book.png" width="50%">](https://drive.google.com/file/d/1fllDv-23j2_3DU2Lg2B9DsWJQSYhwu4H/view?usp=sharing "Editor")
 
 ### Visitante/Leitor
