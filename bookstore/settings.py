@@ -31,6 +31,7 @@ DEBUG = env.bool('DEBUG', default=False)
 
 ALLOWED_HOSTS = ['*']
 
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 
 # Application definition
 
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    #captcha
+    'captcha',
     # app
     'bookstore.apps.books',
     'bookstore.apps.accounts',

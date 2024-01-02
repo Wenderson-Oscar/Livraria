@@ -23,6 +23,7 @@ from django.conf import settings
 urlpatterns = [
     path('', include('bookstore.apps.books.urls', namespace='books')),
     path('admin/', admin.site.urls),
+    path('captcha/', include('captcha.urls')),
     path('accounts/', include('bookstore.apps.accounts.urls', namespace='accounts')),
     path('chat/', include('bookstore.apps.chat.urls.urls_reader', namespace='chats')),
     path('chat/publishers/', include('bookstore.apps.chat.urls.urls_publishers', namespace='chats_publishers')),

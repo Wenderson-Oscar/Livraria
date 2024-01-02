@@ -3,7 +3,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from bookstore.apps.accounts.forms import CreateUserForms
+from bookstore.apps.accounts.forms import CreateUserForms, LoginForm
 from bookstore.apps.accounts.models import User
 from bookstore.apps.books.models import Favority
 from django.contrib.auth.views import PasswordResetView
@@ -80,7 +80,7 @@ class CreateUser(CreateView):
 class Login(LoginView):
 
     template_name = 'accounts/login_user.html'
-    authentication_form = AuthenticationForm
+    authentication_form = LoginForm
     redirect_authenticated_user = True
     success_url = reverse_lazy('books:list_books')
 

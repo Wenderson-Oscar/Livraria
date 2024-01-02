@@ -7,6 +7,13 @@
 Também tem grupo de usuário responsavel por adicionar, editar e remover livros.</p>
 Você também pode pedi para ser parte desse grupo, basta entrar em contato com o administrador do grupo e pedir para ser adicionado.
 
+## Novidades 🌟 🚀
+`Captcha` no formulário de `login` e `cadastro`, para evitar ataques de força bruta.
+
+#### Exemplo de Captcha
+<img src="media/captcha.png" width="50%">
+
+
 ## Demonstração em Vídeo
 
 ### Super ADM
